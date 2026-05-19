@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming 2 | C++ Object-Oriented Programming - Lecture 7</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Beautiful C++ Code Highlighting (Dark Theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        /* Visual Design & Theme: Zain Neon & Liquid Glass */
+        :root {
+            --bg-color: #050814;
+            --card-bg: rgba(9, 14, 32, 0.7);
+            --card-hover-bg: rgba(14, 22, 50, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(0, 242, 254, 0.4);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #f35588;
+            --neon-blue: #3b82f6;
+            --neon-emerald: #10b981;
+            --neon-gold: #ffd700;
+            --font-arabic: 'Cairo', sans-serif;
+            --font-english: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        /* Ambient Animated Blobs (Liquid Glass effect) */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.14;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        .blob-cyan {
+            width: 550px;
+            height: 550px;
+            background: var(--neon-cyan);
+            top: -10%;
+            right: -10%;
+            animation-duration: 22s;
+        }
+
+        .blob-magenta {
+            width: 650px;
+            height: 650px;
+            background: var(--neon-magenta);
+            bottom: -15%;
+            left: -10%;
+            animation-duration: 28s;
+        }
+
+        .blob-blue {
+            width: 450px;
+            height: 450px;
+            background: var(--neon-blue);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 24s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 8%) scale(1.08); }
+            100% { transform: translate(-3%, -5%) scale(0.95); }
+        }
+
+        /* Glassmorphism Overlay */
+        .glass-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, rgba(5, 8, 20, 0.2), rgba(5, 8, 20, 0.85));
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header design */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-family: var(--font-english);
+            font-size: 0.95rem;
+            color: var(--neon-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--neon-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Navigation Glass Tabs */
+        .nav-tabs-wrapper {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            padding: 6px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            list-style: none;
+            overflow-x: auto;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .nav-tabs {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .nav-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 10px;
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab i {
+            font-size: 1.05rem;
+        }
+
+        .nav-tab:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: #050814;
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
+        }
+
+        /* Tab Content Panel */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Cards */
+        .sec-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sec-card:hover {
+            border-color: var(--card-hover-border);
+            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.1);
+        }
+
+        .sec-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .sec-icon {
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+        }
+
+        .sec-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        p {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin: 25px 0 15px 0;
+            font-weight: 700;
+            border-right: 3px solid var(--neon-cyan);
+            padding-right: 10px;
+        }
+
+        /* Lists formatting */
+        ul, ol {
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 1.02rem;
+            color: var(--text-primary);
+        }
+
+        strong {
+            color: #ffffff;
+        }
+
+        /* Terminology Table styling */
+        .term-table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 25px 0;
+        }
+
+        .term-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.95rem;
+        }
+
+        .term-table th {
+            background: rgba(0, 242, 254, 0.08);
+            color: var(--neon-cyan);
+            font-weight: 700;
+            padding: 12px 15px;
+            border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+            font-size: 1rem;
+        }
+
+        .term-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .term-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .term-eng {
+            font-family: var(--font-english);
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Egyptian Engineering Helper Box */
+        .egy-helper {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-right: 4px solid var(--neon-cyan);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .egy-helper-avatar {
+            background: rgba(0, 242, 254, 0.15);
+            color: var(--neon-cyan);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .egy-helper-content h4 {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .egy-helper-content p {
+            margin: 0;
+            font-size: 0.98rem;
+            color: var(--text-primary);
+            text-align: justify;
+        }
+
+        /* Code Block container */
+        .code-container {
+            background: #090e20;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .code-header {
+            background: rgba(5, 8, 20, 0.8);
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-lang {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-english);
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: var(--neon-cyan);
+            color: #050814;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 18px !important;
+            background: transparent !important;
+            font-size: 0.92rem !important;
+            line-height: 1.5 !important;
+        }
+
+        code[class*="language-"] {
+            font-family: var(--font-mono) !important;
+            text-shadow: none !important;
+        }
+
+        .cpp-inline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.92rem;
+            color: var(--neon-cyan);
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Line Breakdown Card Box */
+        .breakdown-box {
+            background: rgba(5, 8, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .breakdown-box h4 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 10px;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .breakdown-line {
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            font-size: 0.95rem;
+            font-weight: 700;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .breakdown-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Quiz components styling */
+        .quiz-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: rgba(0, 242, 254, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quiz-number {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--neon-cyan);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            padding: 14px 20px;
+            border-radius: 10px;
+            text-align: right;
+            cursor: pointer;
+            font-size: 0.98rem;
+            font-family: var(--font-arabic);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .option-btn.selected {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 242, 254, 0.05);
+        }
+
+        .option-btn.correct {
+            border-color: var(--neon-emerald) !important;
+            background: rgba(16, 185, 129, 0.08) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--neon-magenta) !important;
+            background: rgba(243, 85, 136, 0.08) !important;
+            color: #ffffff !important;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .quiz-feedback.success {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            color: #a7f3d0;
+        }
+
+        .quiz-feedback.error {
+            background: rgba(243, 85, 136, 0.05);
+            border: 1px solid rgba(243, 85, 136, 0.15);
+            color: #fecdd3;
+        }
+
+        /* Challenge Cards */
+        .challenge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .challenge-card {
+            background: rgba(5, 8, 20, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .challenge-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .challenge-desc {
+            color: var(--text-secondary);
+            font-size: 1.02rem;
+            margin-bottom: 20px;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
+            border: none;
+            color: #050814;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--font-arabic);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reveal-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .solution-box {
+            display: none;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(5, 7, 12, 0.9);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 8px;
+        }
+
+        .neon-footer-brand {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.9), 0 0 20px rgba(0, 243, 255, 0.7), 0 0 40px rgba(0, 243, 255, 0.4);
+            letter-spacing: 2px;
+            margin: 0;
+            cursor: pointer;
+            transition: text-shadow 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .neon-footer-brand:hover {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 1), 0 0 40px rgba(0, 243, 255, 0.9), 0 0 80px rgba(0, 243, 255, 0.7);
+            transform: scale(1.08);
+        }
+
+        /* Specific C++ text inside Arabic paragraph helper */
+        .cpp-ar-inline {
+            direction: ltr;
+            unicode-bidi: embed;
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+
+        .arrow-indicator {
+            color: var(--neon-magenta);
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .back-dashboard-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--neon-cyan);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-dashboard-btn:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .back-dashboard-btn {
+                position: static;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Light Blobs -->
+    <div class="ambient-bg">
+        <div class="blob blob-cyan"></div>
+        <div class="blob blob-magenta"></div>
+        <div class="blob blob-blue"></div>
+    </div>
+
+    <!-- Radial Glass Overlay -->
+    <div class="glass-overlay"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <a href="index.html" class="back-dashboard-btn"><i class="fa-solid fa-house"></i> بوابة المحاضرات</a>
+            <div class="logo-badge">
+                <i class="fa-solid fa-graduation-cap"></i> CSC1200 | Lecture 7
+            </div>
+            <h1>Polymorphism & Virtual Functions</h1>
+            <div class="subtitle">
+                احترف بناء الأكواد المرنة واستخدام مؤشرات الأب لتوجيه الأبناء في الذاكرة ديناميكياً مع حماية الدوال وتأمين الصداقة البرمجية.
+            </div>
+        </header>
+
+        <!-- Glass Navigation Tabs -->
+        <div class="nav-tabs-wrapper">
+            <ul class="nav-tabs">
+                <li style="flex: 1;">
+                    <button class="nav-tab active" onclick="switchTab(event, 'poly-tab')">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> تعدد الأشكال والدوال الافتراضية
+                    </button>
+                </li>
+                <li style="flex: 1;">
+                    <button class="nav-tab" onclick="switchTab(event, 'abstract-tab')">
+                        <i class="fa-solid fa-shapes"></i> الكلاسات المجردة
+                    </button>
+                </li>
+                <li style="flex: 1;">
+                    <button class="nav-tab" onclick="switchTab(event, 'friend-tab')">
+                        <i class="fa-solid fa-handshake"></i> دوال وفئات الصداقة
+                    </button>
+                </li>
+                <li style="flex: 1;">
+                    <button class="nav-tab" onclick="switchTab(event, 'quiz-tab')">
+                        <i class="fa-solid fa-gamepad"></i> الكويز والتحديات
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab 1: Polymorphism & Virtual Functions -->
+        <div id="poly-tab" class="tab-content active">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-wand-magic-sparkles sec-icon"></i>
+                    <h2 class="sec-title">تعدد الأشكال والدوال الافتراضية (Polymorphism & Virtual Functions)</h2>
+                </div>
+                <p>
+                    كلمة **Polymorphism** تعني لغوياً "تعدد الأشكال" (poly = متعدد، morph = شكل). في البرمجة الكائنية، يشير المصطلح إلى قدرة المتغير أو الدالة أو المؤشر (Pointer) على اتخاذ عدة أشكال برمجية.
+                </p>
+                <p>
+                    الهدف الأساسي هو معاملة الكائنات التي تنتمي لعائلات مختلفة (ولكنها تشترك في أب واحد) بطريقة موحدة ومبسطة، مع استدعاء السلوك الصحيح تلقائياً أثناء تشغيل البرنامج (Run-time).
+                </p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>المهندس الكبير بيقولك بالبلدي:</h4>
+                        <p>
+                            بص يا هندسة، تخيل عندك جهاز تحكم (ريموت) مكتوب عليه زرار "تشغيل" (Draw). لو الريموت ده بيشاور على مستطيل، وضغطت تشغيل هيرسم مستطيل. لو بيشاور على دايرة هيرسم دايرة. الريموت هو مؤشر الأب (Base Class Pointer)، والزرار هو الدالة الافتراضية (Virtual Function)، والأشكال هي الأبناء! بضغطة زر واحدة البرنامج بيعرف يوجه الكود للابن الصح وهو شغال!
+                        </p>
+                    </div>
+                </div>
+
+                <h3>أنواع تعدد الأشكال (Types of Polymorphism):</h3>
+                <ol>
+                    <li><strong>Compile-time Polymorphism (Static/Early Binding):</strong> يتم ربط الدالة وقت الترجمة. مثل الـ **Function Overloading** والـ **Operator Overloading**.</li>
+                    <li><strong>Run-time Polymorphism (Dynamic/Late Binding):</strong> يتم تحديد الدالة المستدعاة أثناء تشغيل البرنامج بناء على نوع الكائن الفعلي في الذاكرة. يتم ذلك باستخدام **Virtual Functions** مع مؤشرات الأب (Base Pointers).</li>
+                </ol>
+
+                <h3>الدوال الافتراضية (Virtual Functions):</h3>
+                <p>
+                    الدالة الافتراضية هي دالة يتم الإعلان عنها بكلمة <span class="cpp-inline">virtual</span> داخل الكلاس الأب، وتتم إعادة تعريفها (Overridden) في الكلاس الابن.
+                </p>
+                <p>
+                    بدون الكلمة المفتاحية <span class="cpp-inline">virtual</span>، إذا شاور مؤشر الأب على كائن ابن، واستدعى الدالة، فسيقوم C++ باستدعاء دالة الأب دائماً! (ما يعرف بالربط المبكر Early Binding). لكن عند وضع <span class="cpp-inline">virtual</span>، يلتزم C++ بالبحث عن الدالة داخل الابن الفعلي في الذاكرة.
+                </p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> virtual_functions.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Shape {
+public:
+    // وضع virtual يضمن تفعيل تعدد الأشكال ديناميكياً
+    virtual void draw() {
+        cout << "Drawing a generic shape..." << endl;
+    }
+};
+
+class Rectangle : public Shape {
+public:
+    void draw() override { // استخدام override اختياري ولكنه ينصح به للتأكيد
+        cout << "Drawing a Rectangle!" << endl;
+    }
+};
+
+class Circle : public Shape {
+public:
+    void draw() override {
+        cout << "Drawing a Circle!" << endl;
+    }
+};
+
+int main() {
+    Shape* shape_ptr; // مؤشر من نوع الأب
+    
+    Rectangle rect;
+    Circle circ;
+
+    // المؤشر يشير للمستطيل
+    shape_ptr = &rect;
+    shape_ptr->draw(); // هيطبع: Drawing a Rectangle!
+
+    // المؤشر يشير للدائرة
+    shape_ptr = &circ;
+    shape_ptr->draw(); // هيطبع: Drawing a Circle!
+
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Abstract Classes & Pure Virtual Functions -->
+        <div id="abstract-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-shapes sec-icon"></i>
+                    <h2 class="sec-title">الكلاسات المجردة والدوال النقية (Abstract Classes & Pure Virtual)</h2>
+                </div>
+                <p>
+                    في بعض الأحيان، يكون كلاس الأب عاماً جداً لدرجة أنه ليس له معنى منطقي لبناء كائنات منه مباشرة! على سبيل المثال، ما معنى كائن من نوع "شكل" (Shape)؟ ليس له أبعاد محددة وليس له لون مرسوم. نحن فقط نحتاجه ليكون "قاعدة عريضة وموحدة" (Interface) يورثها الأبناء مثل المستطيل والدائرة.
+                </p>
+                <p>
+                    هذا الكلاس يسمى **الكلاس المجرد (Abstract Class)** وهو كلاس لا يمكن إنشاء كائنات (Instantiate) منه مطلقاً.
+                </p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-circle-nodes"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>المهندس الكبير بيقولك بالبلدي:</h4>
+                        <p>
+                            بص يا هندسة، الكلاس المجرد هو مجرد "عقد" أو "كتالوج مواصفات" (Interface). الأب بيقول لعياله: "أنا هعمل دالة للمساحة بس مش هكتب كودها، لأن كل واحد فيكم بيحسب مساحته بطريقة شكل! بس لو حد فيكم مورثش الدالة دي وكتب كودها بنفسه، البرنامج مش هيشتغل وهيطلع خطأ!" كدا أنت بتجبر الأبناء يلتزموا بالمعايير.
+                        </p>
+                    </div>
+                </div>
+
+                <h3>كيف نجعل الكلاس مجرداً؟ (Pure Virtual Function)</h3>
+                <p>
+                    يصبح الكلاس مجرداً تلقائياً بمجرد الإعلان عن دالة افتراضية واحدة على الأقل فيه وتعيينها بالصفر <span class="cpp-inline">= 0</span>. تسمى هذه الدالة بـ **الدالة الافتراضية النقية (Pure Virtual Function)**.
+                </p>
+                <div class="code-container">
+                    <pre><code class="language-cpp">class Shape {
+public:
+    // دالة افتراضية نقية تجعل الكلاس مجرداً بالكامل
+    virtual double getArea() = 0; 
+};</code></pre>
+                </div>
+
+                <h3>قواعد الكلاسات المجردة الهامة:</h3>
+                <ul>
+                    <li>لا يمكن إنشاء كائن مباشرة من الكلاس المجرد: <span class="cpp-inline">Shape s; // خطأ! compiler error</span></li>
+                    <li>يمكن إنشاء **مؤشرات** (Pointers) أو **مراجع** (References) من نوع الكلاس المجرد للإشارة إلى كائنات الأبناء.</li>
+                    <li>أي كلاس ابن يرث كلاس مجرد **يجب** أن يعيد تعريف جميع الدوال النقية ويكتب كودها، وإلا سيتحول الكلاس الابن نفسه إلى كلاس مجرد ويمنع إنشاء كائنات منه!</li>
+                </ul>
+
+                <h3>مثال برمجي كامل ومحكم:</h3>
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> abstract_demo.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// كلاس مجرد (Abstract Class)
+class Shape {
+protected:
+    double width, height;
+
+public:
+    Shape(double w = 0, double h = 0) : width(w), height(h) {}
+
+    // دالة افتراضية نقية
+    virtual double getArea() = 0; 
+};
+
+class Rectangle : public Shape {
+public:
+    Rectangle(double w, double h) : Shape(w, h) {}
+
+    // مجبرين نعيد تعريف دالة المساحة
+    double getArea() override {
+        return width * height;
+    }
+};
+
+class Triangle : public Shape {
+public:
+    Triangle(double w, double h) : Shape(w, h) {}
+
+    double getArea() override {
+        return 0.5 * width * height;
+    }
+};
+
+int main() {
+    // Shape s; // خطأ برمي! لا يمكن بناء كائن مباشر من كلاس مجرد
+
+    Shape* s1 = new Rectangle(10, 5);
+    Shape* s2 = new Triangle(10, 5);
+
+    cout << "Rectangle Area: " << s1->getArea() << endl; // هيطبع 50
+    cout << "Triangle Area: " << s2->getArea() << endl;  // هيطبع 25
+
+    delete s1;
+    delete s2;
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Friend Functions & Friend Classes -->
+        <div id="friend-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-handshake sec-icon"></i>
+                    <h2 class="sec-title">دوال وفئات الصداقة (Friend Functions & Friend Classes)</h2>
+                </div>
+                <p>
+                    أحد أهم مبادئ الـ OOP هو **الكبسلة (Encapsulation)** لمنع الدوال الخارجية من قراءة أو تعديل المتغيرات الخاصة والسرية (<span class="cpp-inline">private</span> و <span class="cpp-inline">protected</span>). 
+                </p>
+                <p>
+                    ولكن في بعض الحالات الهندسية النادرة، قد تحتاج دالة خارجية أو كلاس خارجي بالكامل للوصول المباشر والسريع لهذه البيانات السرية دون استخدام Getters و Setters. هنا يأتي دور **الصداقة (Friendship)** في C++.
+                </p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>المهندس الكبير بيقولك بخصوص الصداقة:</h4>
+                        <p>
+                            بص يا هندسة، الصداقة دي تصريح أمني استثنائي! الكلاس بيعلن داخل كوده وبيقول: "الدالة دي أو الكلاس ده صاحبي وصديقي الصدوق، مسموح له يدخل غرفتي الخاصة ويقرأ بياناتي السرية مباشرة!"<br>
+                            <strong>افتكر القواعد الذهبية دي كويس جداً:</strong><br>
+                            1. <strong>ليست متبادلة (Not Mutual):</strong> لو B صديق A، ده مش معناه إن A صديق لـ B تلقائياً!<br>
+                            2. <strong>لا تُورث (Not Inherited):</strong> لو B صديق A، عيال B مش أصدقاء لـ A، وB مش صديق لأبناء A!
+                        </p>
+                    </div>
+                </div>
+
+                <h3>1. الدالة الصديقة (Friend Function):</h3>
+                <p>
+                    هي دالة **ليست** عضواً في الكلاس (مستقلة وتعرف في الخارج كدالة عادية)، ولكن يتم وضع نموذجها (Prototype) داخل الكلاس مسبوقاً بكلمة <span class="cpp-inline">friend</span>.
+                </p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> friend_function.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Box {
+private:
+    double width;
+
+public:
+    Box(double w) : width(w) {}
+
+    // الإعلان عن الدالة كصديقة للكلاس
+    friend void printWidth(Box b); 
+};
+
+// تعريف الدالة في الخارج كدالة عادية تماماً (بدون Scope Resolution أو friend)
+void printWidth(Box b) {
+    // تلاحظ هنا أننا نقرأ b.width الخاص مباشرة بدون دوال Get!
+    cout << "Width of box: " << b.width << endl; 
+}
+
+int main() {
+    Box box(12.5);
+    printWidth(box); // استدعاء عادي جداً
+    return 0;
+}</code></pre>
+                </div>
+
+                <h3>2. الكلاس الصديق (Friend Class):</h3>
+                <p>
+                    يمكن الإعلان عن كلاس كامل كصديق لكلاس آخر. في هذه الحالة، تصبح جميع دوال وأعضاء الكلاس الصديق قادرة على الوصول للمتغيرات الخاصة والمحمية للكلاس الأصلي.
+                </p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> friend_class.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Database {
+private:
+    string adminPassword = "SuperSecretPassword123";
+
+public:
+    // الإعلان عن كلاس المحاسب أو الفاحص كصديق
+    friend class SystemAuditor; 
+};
+
+class SystemAuditor {
+public:
+    void auditDatabase(Database db) {
+        // الوصول للباسورد الخاص مباشرة بأمان وسرعة!
+        cout << "[Security Audit] Accessing Admin Password: " << db.adminPassword << endl;
+    }
+};
+
+int main() {
+    Database db;
+    SystemAuditor auditor;
+    auditor.auditDatabase(db);
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Interactive Quiz & Challenges -->
+        <div id="quiz-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-gamepad sec-icon"></i>
+                    <h2 class="sec-title">الكويز التفاعلي والتحديات البرمجية</h2>
+                </div>
+
+                <h3 style="margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-circle-question" style="color: var(--neon-cyan); margin-left: 8px;"></i>Interactive Knowledge Check (MCQ Quiz):</h3>
+
+                <div class="quiz-section">
+                    <!-- MCQ 1 -->
+                    <div class="quiz-card" id="q1">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 1</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which keyword must be used inside a base class to allow dynamic (run-time) binding of a function in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(1, 'A', 'wrong', this)">A) dynamic <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'B', 'correct', this)">B) virtual <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'C', 'wrong', this)">C) override <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'D', 'wrong', this)">D) friend <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-1"></div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div class="quiz-card" id="q2">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 2</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is a Pure Virtual Function in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(2, 'A', 'wrong', this)">A) A function that cannot be overridden by derived classes. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'B', 'wrong', this)">B) A function that does not return any value (void). <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'C', 'correct', this)">C) A virtual function declared in a base class with "= 0" and no body, making the class abstract. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'D', 'wrong', this)">D) A function that belongs to a friend class. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-2"></div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div class="quiz-card" id="q3">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 3</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which of the following is true regarding Abstract Classes in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(3, 'A', 'wrong', this)">A) Objects can be created from them using the "new" keyword. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'B', 'correct', this)">B) No objects can be instantiated from them; they serve as interfaces. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'C', 'wrong', this)">C) They can only contain pure virtual functions and no regular variables. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'D', 'wrong', this)">D) They are automatically created by all friend classes. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-3"></div>
+                    </div>
+
+                    <!-- MCQ 4 -->
+                    <div class="quiz-card" id="q4">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 4</span>
+                        </div>
+                        <div class="quiz-question">
+                            A friend function of a class:
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(4, 'A', 'wrong', this)">A) Must be declared in the public section of the class to work. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'B', 'correct', this)">B) Is not a member of the class but has full access to all private and protected members of that class. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'C', 'wrong', this)">C) Is inherited by all subclasses. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'D', 'wrong', this)">D) Can be invoked using the dot (.) operator on an object. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-4"></div>
+                    </div>
+
+                    <!-- MCQ 5 -->
+                    <div class="quiz-card" id="q5">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 5</span>
+                        </div>
+                        <div class="quiz-question">
+                            If Class B is declared as a friend of Class A, which of the following statements is correct?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(5, 'A', 'correct', this)">A) Class B can access all private and protected members of Class A, but A cannot access private members of B unless explicitly made friend. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'B', 'wrong', this)">B) Class A can automatically access all private members of Class B. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'C', 'wrong', this)">C) Subclasses of Class B are automatically friends of Class A. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'D', 'wrong', this)">D) Friendship is inherited, so Class B is a friend of all subclasses of A. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-5"></div>
+                    </div>
+                </div>
+
+                <!-- Practical Challenges -->
+                <h3 style="margin-top: 50px; margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-laptop-code" style="color: var(--neon-magenta); margin-left: 8px;"></i>Professional Coding Challenges:</h3>
+
+                <div class="challenge-container">
+                    <!-- Challenge 1 -->
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-circle-exclamation" style="color: var(--neon-magenta);"></i> Challenge 1: Dynamic Payment Gateway
+                        </div>
+                        <div class="challenge-desc">
+                            Create an abstract base class named <span class="cpp-inline">PaymentMethod</span>. It must contain a pure virtual function <span class="cpp-inline">processPayment(double amount) = 0</span>. Design two derived classes: <span class="cpp-inline">CreditCard</span> and <span class="cpp-inline">PayPal</span>. Show how to process payments dynamically during run-time using a pointer of type <span class="cpp-inline">PaymentMethod*</span>.
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol1', this)"><i class="fa-solid fa-eye"></i> Reveal Challenge Solution</button>
+                        <div class="solution-box" id="sol1">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>تحليل الحل البرمجي:</h4>
+                                    <p>بص يا هندسة، هنا بننشئ الكلاس المجرد كبوابة دفع عامة، وبنجبر الكلاسات الفرعية توفر كود خاص لكل منها للتعامل مع العملية بأمان وتوفير تجربة دفع ديناميكية:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> payment_gateway.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// كلاس مجرد بالكامل (Interface)
+class PaymentMethod {
+public:
+    virtual void processPayment(double amount) = 0; // دالة نقية
+    virtual ~PaymentMethod() {} // من الممارسات الممتازة وضع مهدم افتراضي
+};
+
+class CreditCard : public PaymentMethod {
+public:
+    void processPayment(double amount) override {
+        cout << "[Credit Card Payment] Processing transaction of $" << amount 
+             << " through secured bank gateway." << endl;
+    }
+};
+
+class PayPal : public PaymentMethod {
+public:
+    void processPayment(double amount) override {
+        cout << "[PayPal Payment] Authorizing and sending $" << amount 
+             << " using secure tokenized email system." << endl;
+    }
+};
+
+int main() {
+    PaymentMethod* paymentGateway = nullptr; // مؤشر الأب
+
+    // العميل قرر يدفع بالفيزا
+    paymentGateway = new CreditCard();
+    paymentGateway->processPayment(150.0); // استدعاء الفيزا ديناميكياً
+    delete paymentGateway;
+
+    // العميل قرر يدفع بـ PayPal
+    paymentGateway = new PayPal();
+    paymentGateway->processPayment(45.99); // استدعاء باي بال ديناميكياً
+    delete paymentGateway;
+
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge 2 -->
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-medal" style="color: var(--neon-emerald);"></i> Challenge 2: Secure Bank Auditor Tool (Friend Class)
+                        </div>
+                        <div class="challenge-desc">
+                            Create a class named <span class="cpp-inline">BankAccount</span> containing private member variables <span class="cpp-inline">accountHolder</span> and <span class="cpp-inline">balance</span>. Declare another class <span class="cpp-inline">BankAuditor</span> as a friend of <span class="cpp-inline">BankAccount</span>. Inside <span class="cpp-inline">BankAuditor</span>, write a function to print the account balance without using public helper functions of the bank account.
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol2', this)"><i class="fa-solid fa-eye"></i> Reveal Challenge Solution</button>
+                        <div class="solution-box" id="sol2">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>تحليل الحل البرمجي:</h4>
+                                    <p>بص يا هندسة، هنا بنعلن إن كلاس الفاحص صديق للبنك. ده بيدي الفاحص صلاحيات أمنية لقراءة الرصيد السري مباشرة بدون كتابة دوال Getters عامة تكشف الرصيد لباقي البرنامج:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> bank_audit.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class BankAccount {
+private:
+    string accountHolder;
+    double balance;
+
+public:
+    BankAccount(string holder, double bal) : accountHolder(holder), balance(bal) {}
+
+    // تعيين الكلاس الصديق داخل الكود الخاص بالبنك
+    friend class BankAuditor; 
+};
+
+class BankAuditor {
+public:
+    void printReport(const BankAccount& acc) {
+        // قراءة المتغيرات الخاصة مباشرة!
+        cout << "[BANK AUDIT REPORT]" << endl;
+        cout << "Holder: " << acc.accountHolder << endl;
+        cout << "Current Balance: $" << acc.balance << endl;
+        
+        if (acc.balance > 100000) {
+            cout << "Status: Premium VIP Account." << endl;
+        } else {
+            cout << "Status: Standard Active Account." << endl;
+        }
+    }
+};
+
+int main() {
+    BankAccount myAccount("Zain", 150000.0);
+    BankAuditor auditor;
+
+    // الفاحص يطبع تقرير الحساب مباشرة
+    auditor.printReport(myAccount);
+
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p class="neon-footer-brand">By Zain</p>
+        </footer>
+    </div>
+
+    <!-- Prism JS for Code Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <!-- Custom Interactive Logic for UI and Quiz -->
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show current tab content and set active class to clicked button
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            // Scroll to navigation bar so page doesn't feel jumpy
+            const headerHeight = document.querySelector('header').offsetHeight;
+            window.scrollTo({
+                top: headerHeight - 20,
+                behavior: 'smooth'
+            });
+        }
+
+        // solution reveal toggle
+        function toggleSolution(solId, btn) {
+            const solBox = document.getElementById(solId);
+            if (solBox.style.display === "block") {
+                solBox.style.display = "none";
+                btn.innerHTML = '<i class="fa-solid fa-eye"></i> Reveal Challenge Solution';
+            } else {
+                solBox.style.display = "block";
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hide Challenge Solution';
+            }
+        }
+
+        // Quiz scoring state
+        const answers = {
+            1: { ans: 'B', feedback: 'Correct! The keyword "virtual" enables dynamic dispatch at run-time, causing C++ to resolve the function based on the actual object pointed to rather than the pointer type.' },
+            2: { ans: 'C', feedback: 'Correct! Declaring virtual double getArea() = 0; inside a class creates a pure virtual function, rendering the class abstract.' },
+            3: { ans: 'B', feedback: 'Correct! Abstract classes cannot be instantiated. Pointers and references of abstract class types can be created to point to derived class instances.' },
+            4: { ans: 'B', feedback: 'Correct! A friend function is a non-member function that is given privileged access to all private and protected variables/functions of a class.' },
+            5: { ans: 'A', feedback: 'Correct! Friendship is unidirectional (not mutual), meaning Class B can access Class A\'s secrets, but A cannot access B\'s secrets unless explicitly declared.' }
+        };
+
+        function checkAnswer(qNum, selectedOption, result, btn) {
+            const card = document.getElementById('q' + qNum);
+            const buttons = card.querySelectorAll('.option-btn');
+            const feedbackBox = document.getElementById('feedback-' + qNum);
+            
+            // Disable further choices
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('selected');
+            });
+
+            // Mark correct answer and wrong selected answer
+            const correctOpt = answers[qNum].ans;
+            buttons.forEach(b => {
+                if (b.innerText.trim().startsWith(correctOpt)) {
+                    b.classList.add('correct');
+                    b.querySelector('.option-icon').className = "fa-solid fa-circle-check option-icon";
+                } else if (b.innerText.trim().startsWith(selectedOption) && result === 'wrong') {
+                    b.classList.add('wrong');
+                    b.querySelector('.option-icon').className = "fa-solid fa-circle-xmark option-icon";
+                }
+            });
+
+            // Display Feedback Box
+            feedbackBox.style.display = "block";
+            if (result === 'correct') {
+                feedbackBox.className = "quiz-feedback success";
+                feedbackBox.innerHTML = '<i class="fa-solid fa-circle-check" style="margin-left: 8px;"></i>' + answers[qNum].feedback;
+            } else {
+                feedbackBox.className = "quiz-feedback error";
+                feedbackBox.innerHTML = '<i class="fa-solid fa-circle-xmark" style="margin-left: 8px;"></i>' + answers[qNum].feedback;
+            }
+        }
+
+        // Copy button script
+        function copyCode(btn) {
+            const container = btn.closest('.code-container');
+            const codeBlock = container.querySelector('code');
+            const textToCopy = codeBlock.textContent;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check" style="color: var(--neon-emerald);"></i> Copied!';
+                btn.style.borderColor = "var(--neon-emerald)";
+                btn.style.boxShadow = "0 0 10px rgba(16, 185, 129, 0.3)";
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    btn.style.boxShadow = "none";
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

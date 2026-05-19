@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming 2 | C++ Object-Oriented Programming - Lecture 1</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Beautiful C++ Code Highlighting (Dark Theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        /* Visual Design & Theme: Zain Neon & Liquid Glass */
+        :root {
+            --bg-color: #060913;
+            --card-bg: rgba(10, 15, 30, 0.65);
+            --card-hover-bg: rgba(16, 24, 48, 0.8);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(0, 242, 254, 0.4);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #f35588;
+            --neon-blue: #3b82f6;
+            --neon-emerald: #10b981;
+            --neon-gold: #ffd700;
+            --font-arabic: 'Cairo', sans-serif;
+            --font-english: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        /* Ambient Animated Blobs (Liquid Glass effect) */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.15;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        .blob-cyan {
+            width: 500px;
+            height: 500px;
+            background: var(--neon-cyan);
+            top: -10%;
+            left: -10%;
+            animation-duration: 20s;
+        }
+
+        .blob-magenta {
+            width: 600px;
+            height: 600px;
+            background: var(--neon-magenta);
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 30s;
+        }
+
+        .blob-blue {
+            width: 400px;
+            height: 400px;
+            background: var(--neon-blue);
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 25s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, -50px) scale(0.9); }
+        }
+
+        /* Glassmorphic Overlay Layer */
+        .glass-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(6, 9, 19, 0.2) 0%, rgba(6, 9, 19, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* Container & Grid layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Custom Header styled with Liquid Glass */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            font-family: var(--font-english);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 0 0 40px rgba(0, 242, 254, 0.2);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-weight: 300;
+        }
+
+        /* Floating Nav Bar */
+        .nav-tabs-wrapper {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(10, 15, 30, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            padding: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            gap: 5px;
+        }
+
+        .nav-tab {
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .nav-tab:hover:not(.active) {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glassmorphic Lecture Sections */
+        .sec-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sec-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            opacity: 0.7;
+        }
+
+        .sec-card:hover {
+            border-color: var(--card-hover-border);
+            box-shadow: 0 20px 45px rgba(0, 242, 254, 0.08);
+        }
+
+        .sec-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .sec-icon {
+            font-size: 2rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .sec-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Course Info Grid (Instructors & Grading Policy) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        .instructor-card, .policy-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .policy-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .policy-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .policy-item:hover {
+            background: rgba(0, 242, 254, 0.05);
+            border-color: var(--neon-cyan);
+            transform: translateY(-3px);
+        }
+
+        .policy-weight {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            font-family: var(--font-english);
+        }
+
+        .policy-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .rule-badge {
+            background: rgba(243, 85, 136, 0.1);
+            border: 1px solid rgba(243, 85, 136, 0.2);
+            color: var(--neon-magenta);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        /* Egyptian Colloquial Helper Cards (The Zain Style) */
+        .egy-helper {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-right: 4px solid var(--neon-cyan);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px 15px 15px 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .egy-helper-avatar {
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            background: rgba(0, 242, 254, 0.1);
+            padding: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .egy-helper-content h4 {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .egy-helper-content p {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        /* Monospace and Code Block Styling */
+        .code-container {
+            position: relative;
+            margin: 25px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #121624;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .code-header {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            direction: ltr; /* English text direction for file headers */
+        }
+
+        .code-lang {
+            font-family: var(--font-english);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--neon-cyan);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-english);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-btn:hover {
+            background: var(--neon-cyan);
+            color: #000000;
+            border-color: var(--neon-cyan);
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 20px !important;
+            background: transparent !important;
+            font-family: var(--font-mono) !important;
+            font-size: 0.95rem !important;
+            overflow-x: auto;
+            direction: ltr; /* Always LTR for code blocks */
+        }
+
+        code[class*="language-"] {
+            font-family: var(--font-mono) !important;
+            text-shadow: none !important;
+        }
+
+        /* Line-by-line breakdown system */
+        .breakdown-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            border-top: none;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .breakdown-box h4 {
+            font-size: 1.05rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            gap: 15px;
+            font-size: 0.95rem;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .breakdown-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .breakdown-line {
+            font-family: var(--font-mono);
+            color: var(--neon-magenta);
+            font-weight: 700;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        .breakdown-desc {
+            color: var(--text-secondary);
+        }
+
+        .breakdown-desc strong {
+            color: #ffffff;
+        }
+
+        /* Table & Glossary Styling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        .custom-table th {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 15px;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .custom-table tr:hover {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .term-en {
+            font-family: var(--font-english);
+            font-weight: 600;
+            color: #ffffff;
+            direction: ltr;
+            unicode-bidi: embed;
+        }
+
+        .term-ar {
+            font-weight: 700;
+            color: var(--neon-cyan);
+        }
+
+        /* Search input for Glossary */
+        .glossary-search {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #ffffff;
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .glossary-search:focus {
+            border-color: var(--neon-cyan);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+        }
+
+        /* Interactive Quiz Layout */
+        .quiz-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quiz-number {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--neon-cyan);
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: right;
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .option-btn.selected {
+            border-color: var(--neon-blue);
+            background: rgba(59, 130, 246, 0.1);
+            color: #ffffff;
+        }
+
+        .option-btn.correct {
+            border-color: var(--neon-emerald) !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: #ffffff;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--neon-magenta) !important;
+            background: rgba(243, 85, 136, 0.1) !important;
+            color: #ffffff;
+        }
+
+        .option-icon {
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .option-btn.correct .option-icon {
+            color: var(--neon-emerald);
+            opacity: 1;
+        }
+
+        .option-btn.wrong .option-icon {
+            color: var(--neon-magenta);
+            opacity: 1;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            font-size: 0.95rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-feedback.success {
+            border-color: var(--neon-emerald);
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .quiz-feedback.error {
+            border-color: var(--neon-magenta);
+            background: rgba(243, 85, 136, 0.03);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Coding Challenges Grid */
+        .challenge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .challenge-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .challenge-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .reveal-btn:hover {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+            color: #000000;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .solution-box {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Slide Transition Animations and Styling */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(5, 7, 12, 0.9);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 8px;
+        }
+
+        .neon-footer-brand {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.9), 0 0 20px rgba(0, 243, 255, 0.7), 0 0 40px rgba(0, 243, 255, 0.4);
+            letter-spacing: 2px;
+            margin: 0;
+            cursor: pointer;
+            transition: text-shadow 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .neon-footer-brand:hover {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 1), 0 0 40px rgba(0, 243, 255, 0.9), 0 0 80px rgba(0, 243, 255, 0.7);
+            transform: scale(1.08);
+        }
+
+        /* Specific C++ text inside Arabic paragraph helper */
+        .cpp-inline {
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            background: rgba(0, 242, 254, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-3col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .custom-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .card-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--neon-magenta);
+            font-family: var(--font-english);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(243, 85, 136, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Liquid Glass background layers -->
+    <div class="ambient-bg">
+        <div class="blob blob-cyan"></div>
+        <div class="blob blob-magenta"></div>
+        <div class="blob blob-blue"></div>
+    </div>
+    <div class="glass-overlay"></div>
+
+    <div class="container">
+        <!-- Lecture Header -->
+        <header>
+            <div class="logo-badge">
+                <i class="fa-solid fa-graduation-cap"></i> CSC1200 - Programming II
+            </div>
+            <h1>مراجعة أساسيات الـ C++ والانتقال للـ OOP</h1>
+            <p class="subtitle">المحاضرة الأولى: مراجعة شاملة لبنية البرمجة الهيكلية وبناء أول نموذج كلاس وجسم برمجي متكامل</p>
+        </header>
+
+        <!-- Floating Navigation Tabs -->
+        <div class="nav-tabs-wrapper">
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab(event, 'revision-tab')">
+                    <i class="fa-solid fa-code-history"></i> مراجعة الأساسيات
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'oop-intro-tab')">
+                    <i class="fa-solid fa-cubes"></i>  الانتقال للـ OOP
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'glossary-tab')">
+                    <i class="fa-solid fa-book"></i> قاموس الـ OOP
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'interactive-tab')">
+                    <i class="fa-solid fa-gamepad"></i> كويز تفاعلي
+                </button>
+            </nav>
+        </div>
+
+        <!-- ==================== TAB 2: REVISION ==================== -->
+        <div id="revision-tab" class="tab-content active">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-code-history sec-icon"></i>
+                    <h2 class="sec-title">1. مراجعة شاملة لأساسيات الـ C++</h2>
+                </div>
+
+                <!-- Input / Output & Comments -->
+                <h3>أ. الـ Inputs/Outputs والتعليقات (Comments)</h3>
+                <p>في الـ C++ بنستخدم الـ <span class="cpp-inline">std::cin</span> عشان نستقبل الداتا من اليوزر، والـ <span class="cpp-inline">std::cout</span> عشان نطبع المخرجات على الشاشة. وطبعاً المكتبة المسؤولة عن دا هي الـ <span class="cpp-inline">#include &lt;iostream&gt;</span>.</p>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> cpp_basics.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // دا تعليق من سطر واحد (Single-line comment)
+    /* 
+       ودا تعليق من كذا سطر (Multi-line comment)
+       بنستخدمه عشان نشرح الفكرة ورا الكود
+    */
+    int age;
+    cout &lt;&lt; "Enter your age: ";
+    cin &gt;&gt; age;
+    cout &lt;&lt; "Your age is: " &lt;&lt; age &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                </div>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-comments"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>الكومنتس دي بتعمل إيه؟</h4>
+                        <p>بص يا هندسة، الـ Comments دي الكومبيلر (Compiler) مش بيشوفها أصلاً، يعني بتكبر دماغها منها تماماً. دي معمولة عشانك أنت والـ Team اللي شغال معاك عشان تفهموا الكود دا كان بيعمل إيه لما ترجعوا له بعد شهور.</p>
+                    </div>
+                </div>
+
+                <!-- Type Casting -->
+                <h3 style="margin-top: 40px;">ب. تحويل الأنواع (Type Casting)</h3>
+                <p>ساعات بنحتاج نغير نوع الداتا عشان نمنع حدوث أخطاء حسابية (Logical Bugs). أشهر مثال لدا هو قسمة الأرقام الصحيحة:</p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> type_casting.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">// الكود دا فيه مشكلة منطقية:
+int i = 5, j = 3;
+float div = i / j; 
+cout &lt;&lt; div; // هيطبع 1 ! لأن قسمة integer على integer بتطلع integer وبتطير الكسر!
+
+// الحل باستخدام الـ Type Casting:
+float correctDiv = (float)i / j; 
+cout &lt;&lt; correctDiv; // هيطبع 1.66667 صح تماماً!</code></pre>
+                </div>
+
+                <div class="breakdown-box">
+                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> تحليل الكود سطر بسطر:</h4>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">float div = i / j;</span>
+                            <span class="breakdown-desc">هنا الكومبيلر بيقسم 5 على 3 كأعداد صحيحة أولاً والناتج بيكون 1، بعد كدا بيحطها في متغير <span class="cpp-inline">float</span> فيتحول لـ 1.0. ودي مشكلة شهيرة جداً!</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">(float)i</span>
+                            <span class="breakdown-desc">هنا بنعمل **Casting** صريح، كأننا بنقول للكومبيلر: "اتعامل مع الـ <span class="cpp-inline">i</span> للحظة دي بس كأنها رقم عشري". فبالتالي القسمة هتتحول لقسمة عشرية وتطلع النتيجة بالكسر.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Increment / Decrement & Loops -->
+                <h3 style="margin-top: 40px;">ج. الـ Increment/Decrement والتكرار (Loops)</h3>
+                <p>لازم نفهم الفرق بين التزويد القبلي والتزويد البعدي في المعاملات:</p>
+                <ul>
+                    <li><span class="cpp-inline">++x</span> (Pre-increment): بيزود الأول في الميموري، وبعد كدا بيستخدم القيمة الجديدة في العملية الحسابية.</li>
+                    <li><span class="cpp-inline">x++</span> (Post-increment): بيستخدم القيمة القديمة الأول في العملية الحسابية، وبعد كدا بيزود في الميموري.</li>
+                </ul>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> loops_tricks.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">// خدعة شهيرة في الـ Loops:
+int i;
+for (i = 0; i++ &lt; 10; ) {
+    // Loop جسمه فاضي
+}
+cout &lt;&lt; i; // هيطبع كام برة اللوب؟ هيطبع 11!
+
+// مثال على الـ do-while اللي بيتنفذ مرة واحدة على الأقل غصب عن الشرط:
+int k = 11;
+do {
+    cout &lt;&lt; k &lt;&lt; " ";
+    k += 5;
+} while (k &lt;= 10); // هيطبع 11 وبعدين يخرج برة اللوب!</code></pre>
+                </div>
+
+                <!-- Value vs Reference Parameters -->
+                <h3 style="margin-top: 40px;">د. تمرير المعاملات (Value vs Reference Parameters)</h3>
+                <p>لما بنبعت متغير للفانكشن، عندنا طريقتين:</p>
+                <ol>
+                    <li><strong>Pass by Value:</strong> بنبعت نسخة من المتغير. لو غيرنا قيمته جوة الفانكشن، المتغير الأصلي برة مش هيتأثر.</li>
+                    <li><strong>Pass by Reference:</strong> بنبعت عنوان المتغير الأصلي باستخدام الـ <span class="cpp-inline">&amp;</span>. أي تغيير جوة الفانكشن هيغير المتغير الأصلي برة فوراً!</li>
+                </ol>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> references.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// دالة التبديل الشهيرة باستخدام الـ Reference
+void swap(int &x, int &y) {
+    int temp = x;
+    x = y;
+    y = temp;
+}
+
+int main() {
+    int a = 10, b = 20;
+    swap(a, b);
+    cout &lt;&lt; "a: " &lt;&lt; a &lt;&lt; " | b: " &lt;&lt; b; // هيطبع a: 20 | b: 10
+    return 0;
+}</code></pre>
+                </div>
+
+                <div class="breakdown-box">
+                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> ليه الـ Swap دي نجحت؟</h4>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">void swap(int &x, int &y)</span>
+                            <span class="breakdown-desc">علامة الـ **`&`** دي معناها إننا استقبلنا الـ **Memory Address** بتاع المتغيرات الحقيقية. يعني الفانكشن بتعدل مباشرة على مكان <span class="cpp-inline">a</span> و <span class="cpp-inline">b</span> في الرامات!</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: TRANSITION TO OOP ==================== -->
+        <div id="oop-intro-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-cubes sec-icon"></i>
+                    <h2 class="sec-title">2. الانتقال إلى البرمجة كائنية التوجه (OOP)</h2>
+                </div>
+
+                <p>في البرمجة الهيكلية (Structured Programming) اللي درسناها قبل كدا، كنا بنفصل البيانات (Variables) عن الدوال (Functions) اللي بتشتغل عليها. المشكلة دي كانت بتعمل لخبطة لما المشروع يكبر!</p>
+                <p>الـ <strong>OOP</strong> حلت المشكلة دي تماماً بإنها جمعت البيانات والدوال اللي بتخدمها جوة علبة واحدة سميناها <strong>Class</strong>، ومنه بنقدر ناخد نسخ حقيقية اسمها <strong>Objects</strong>.</p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-house-laptop"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>مثال عملي: نظام أمان المنزل الذكي (Smart Home Security)</h4>
+                        <p>تخيل إننا شغالين في شركة بتعمل أنظمة أمان ذكية، وعايزين نعمل برنامج للتحكم في قفل الباب (Door Lock) وتسجيل عمليات الفتح والقفل (Access Logs). لو عملناها بالبرمجة العادية، المتغيرات هتكون سايحة في الكود. لكن مع الـ OOP، هنعمل كلاس اسمه <span class="cpp-inline">DoorLock</span> وكلاس تاني اسمه <span class="cpp-inline">AccessLog</span> يمثلوا الكيان دا بالكامل!</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 40px;"><i class="fa-solid fa-code-branch"></i> بناء الكلاسات وتطبيق مبدأ الـ Encapsulation</h3>
+                <p>الكود اللي جاي بيوضح إزاي نبني كلاس متكامل بيحتوي على Constructor و Destructor ودوال داخلية، وبيخزن التواريخ والأوقات تلقائياً باستخدام الـ <span class="cpp-inline">std::vector</span>:</p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> smart_security.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;ctime&gt;
+
+using namespace std;
+
+// كلاس لتخزين أوقات فتح الباب
+class AccessLog {
+private:
+    vector&lt;string&gt; timestamps; // مخفي ومحمي جوة الكلاس (Encapsulation)
+
+public:
+    void addLog(const string& timestamp) {
+        timestamps.push_back(timestamp);
+    }
+
+    void showLogs() const {
+        cout &lt;&lt; "--- Access Log History ---" &lt;&lt; endl;
+        for (const auto& log : timestamps) {
+            cout &lt;&lt; "[LOG] Door opened at: " &lt;&lt; log &lt;&lt; endl;
+        }
+    }
+};
+
+// الكلاس الأساسي للتحكم بالقفل الذكي
+class DoorLock {
+private:
+    string lockID;
+    bool isLocked;
+    AccessLog log; // تركيب كلاس جوة كلاس (Composition)
+
+public:
+    // 1. الباني (Constructor): بيشتغل تلقائياً عند إنشاء الكائن
+    DoorLock(string id) {
+        lockID = id;
+        isLocked = true; // الباب بيتقفل أول ما يتثبت السيستم
+        cout &lt;&lt; "[System] DoorLock " &lt;&lt; lockID &lt;&lt; " has been Initialized." &lt;&lt; endl;
+    }
+
+    // 2. الهادم (Destructor): بيشتغل تلقائياً عند تدمير الكائن
+    ~DoorLock() {
+        cout &lt;&lt; "[System] DoorLock " &lt;&lt; lockID &lt;&lt; " shutting down safely." &lt;&lt; endl;
+    }
+
+    // دالة لفتح الباب وتسجيل الوقت
+    void unlock() {
+        if (isLocked) {
+            isLocked = false;
+            cout &lt;&lt; "[Action] Door " &lt;&lt; lockID &lt;&lt; " is now UNLOCKED." &lt;&lt; endl;
+            
+            // جلب الوقت الحالي لتسجيله
+            time_t now = time(0);
+            char* dt = ctime(&now);
+            string ts(dt);
+            ts.pop_back(); // حذف العلامة السطرية الجديدة
+            log.addLog(ts);
+        } else {
+            cout &lt;&lt; "[Warning] Door is already unlocked." &lt;&lt; endl;
+        }
+    }
+
+    void lock() {
+        isLocked = true;
+        cout &lt;&lt; "[Action] Door " &lt;&lt; lockID &lt;&lt; " is now LOCKED." &lt;&lt; endl;
+    }
+
+    void displayStatus() const {
+        cout &lt;&lt; "=== Device Info ===" &lt;&lt; endl;
+        cout &lt;&lt; "Device ID: " &lt;&lt; lockID &lt;&lt; endl;
+        cout &lt;&lt; "Status: " &lt;&lt; (isLocked ? "LOCKED" : "UNLOCKED") &lt;&lt; endl;
+        log.showLogs();
+    }
+};
+
+int main() {
+    // إنشاء كائن (Object) من الكلاس DoorLock
+    DoorLock frontDoor("FRONT_GATE_01");
+    
+    // محاكاة فتح وقفل الباب
+    frontDoor.unlock();
+    frontDoor.lock();
+    frontDoor.unlock();
+    
+    // عرض الحالة والسجلات
+    frontDoor.displayStatus();
+    
+    return 0; // هنا الـ Object هيموت والـ Destructor هيشتغل تلقائياً!
+}</code></pre>
+                </div>
+
+                <div class="breakdown-box">
+                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> شرح تفصيلي للأسطر المعقدة:</h4>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">class AccessLog { private: vector&lt;string&gt; timestamps; ... }</span>
+                            <span class="breakdown-desc">هنا طبقنا الـ **Encapsulation**. المتغير <span class="cpp-inline">timestamps</span> محمي بـ <span class="cpp-inline">private</span>، مفيش أي كود من برة يقدر يمسحه أو يعدل عليه مباشرة، التعديل بيتم بس من خلال الدالة العامة <span class="cpp-inline">addLog()</span>.</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">DoorLock(string id)</span>
+                            <span class="breakdown-desc">دا الـ **Constructor** (الباني). دالة خاصة جداً، اسمها بيبقى نفس اسم الكلاس ومفيش ليها return type. بتشتغل تلقائياً أول ما نكتب <span class="cpp-inline">DoorLock frontDoor("...")</span> عشان تأهل الرامات وتثبت القيم الافتراضية.</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">~DoorLock()</span>
+                            <span class="breakdown-desc">دا الـ **Destructor** (الهادم). بيبدأ بعلامة الـ (Tilde) `~`. بيشتغل تلقائياً في نهاية البرنامج أو لما الكائن يخرج برة الـ Scope بتاعه عشان يفضي أي رامات محجوزة وينظف وراه السيستم.</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">AccessLog log; // inside DoorLock</span>
+                            <span class="breakdown-desc">دا مبدأ الـ **Composition** (التركيب). الباب الذكي بيحتوي على سجل الوصول كعضو داخلي جواه، كأن الكلاس التاني بقى جزء لا يتجزأ من الكلاس الأول.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: GLOSSARY ==================== -->
+        <div id="glossary-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-book sec-icon"></i>
+                    <h2 class="sec-title">3. قاموس مصطلحات الـ OOP والمفاهيم البرمجية</h2>
+                </div>
+
+                <p>بص يا هندسة، عشان ندخل على البرمجة بقلب جامد، لازم تكون عارف المصطلحات البرمجية بالإنجليزي وبالعربي اللي بنسمعه في الشركات. تقدر تستخدم مربع البحث دا عشان تدور على أي مصطلح فوراً:</p>
+
+                <input type="text" id="glossarySearch" class="glossary-search" oninput="searchGlossary()" placeholder="ابحث عن المصطلح (مثال: Class)...">
+
+                <div class="table-responsive">
+                    <table class="custom-table" id="glossaryTable">
+                        <thead>
+                            <tr>
+                                <th>المصطلح بالإنجليزي (English)</th>
+                                <th>المسمى بالعربي (Arabic)</th>
+                                <th>الشرح بالبلدي الهندسي (Egyptian Explanation)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="term-en">Class</td>
+                                <td class="term-ar">الفئة / الكلاس</td>
+                                <td>عامل زي الكتالوج أو الرسم الهندسي (Blueprint). مش بيحجز مكان في الميموري، هو بس بيوصف شكل المتغيرات والدوال اللي هتبقى جوة الكائنات لما تتخلق.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Object</td>
+                                <td class="term-ar">الكائن / الأوبجكت</td>
+                                <td>النسخة الفعلية اللي بنيناها بناءً على الكتالوج (الكلاس). الأوبجكت دا بيتحجز له مكان حقيقي في الرامات وبيبقى ليه قيمة وحالة خاصة بيه.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Encapsulation</td>
+                                <td class="term-ar">تغليف وإخفاء البيانات</td>
+                                <td>إنك تجمع الداتا والدوال في كبسولة واحدة، وتخفي البيانات الحساسة خلف جدار الـ <span class="cpp-inline">private</span> عشان تحميها من اللعب الخارجي، وتوفر دوال تحكم عامة <span class="cpp-inline">public</span>.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Inheritance</td>
+                                <td class="term-ar">الوراثة</td>
+                                <td>توفير للوقت والمجهود! كلاس جديد (Derived) بياخد كل الخصائص والدوال من كلاس قديم (Base)، ويقدر يضيف خصائص جديدة من غير ما نعيد كتابة الكود من الصفر.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Polymorphism</td>
+                                <td class="term-ar">تعدد الأشكال</td>
+                                <td>إن نفس الدالة يكون ليها كذا شكل وكذا تطبيق حسب الكلاس اللي بيناديها، ودا بنعمله عن طريق الـ <span class="cpp-inline">virtual functions</span>.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Abstraction</td>
+                                <td class="term-ar">التجريد</td>
+                                <td>إنك تخفي التفاصيل المعقدة للسيستم وتظهر للمستخدم بس الزراير أو الدوال اللي محتاجها عشان يشتغل. زي كابينة العربية: أنت ليك الدريكسيون والفرامل، ومش لازم تعرف الموتور شغال إزاي من جوة.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Constructor</td>
+                                <td class="term-ar">الدالة البانية</td>
+                                <td>أول فانكشن بتشتغل تلقائياً أول ما الأوبجكت يتخلق. بنستخدمها عشان ندي قيم افتراضية للمتغيرات ونحجز رامات لو محتاجين.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Destructor</td>
+                                <td class="term-ar">الدالة الهادمة</td>
+                                <td>الفانكشن اللي بتشتغل لوحدها لما الأوبجكت يقرر يموت ويخرج برة الميموري. مهمتها تنضف ورانا وتفضي أي ذاكرة ديناميكية محجوزة.</td>
+                            </tr>
+                            <tr>
+                                <td class="term-en">Composition</td>
+                                <td class="term-ar">التركيب</td>
+                                <td>علاقة بين الكلاسات بنسميها (Has-A). يعني كلاس جواه كائن من كلاس تاني، زي الباب الذكي اللي جواه سجل الأحداث بتاعه.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 5: INTERACTIVE QUIZ ==================== -->
+        <div id="interactive-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-gamepad sec-icon"></i>
+                    <h2 class="sec-title">4. الكويز التفاعلي والتحديات البرمجية</h2>
+                </div>
+
+                <h3 style="margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-circle-question" style="color: var(--neon-cyan); margin-left: 8px;"></i>اختبر معلوماتك (MCQ Quiz):</h3>
+                
+
+                <div class="quiz-section">
+                    <!-- MCQ 1 -->
+                    <div class="quiz-card" id="q1">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 1</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the output of the following C++ code?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">int a = 10, b = 4;
+double res = (double)(a / b);
+cout &lt;&lt; res;</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(1, 'A', 'wrong', this)">A) 2.5 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'B', 'correct', this)">B) 2.0 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'C', 'wrong', this)">C) 2 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'D', 'wrong', this)">D) 2.25 <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-1"></div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div class="quiz-card" id="q2">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 2</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the output of the following program?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">int a = 5;
+int b = a++;
+int c = ++a;
+cout &lt;&lt; b &lt;&lt; " " &lt;&lt; c;</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(2, 'A', 'correct', this)">A) 5 7 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'B', 'wrong', this)">B) 5 6 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'C', 'wrong', this)">C) 6 7 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'D', 'wrong', this)">D) 6 6 <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-2"></div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div class="quiz-card" id="q3">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 3</span>
+                        </div>
+                        <div class="quiz-question">
+                            What are the values of variables after calling the following function?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">void modify(int x, int &y) {
+    x = 10;
+    y = 20;
+}
+int main() {
+    int a = 5, b = 5;
+    modify(a, b);
+    cout &lt;&lt; a &lt;&lt; " " &lt;&lt; b;
+}</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(3, 'A', 'wrong', this)">A) 5 5 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'B', 'wrong', this)">B) 10 20 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'C', 'correct', this)">C) 5 20 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'D', 'wrong', this)">D) 10 5 <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-3"></div>
+                    </div>
+
+                    <!-- MCQ 4 -->
+                    <div class="quiz-card" id="q4">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 4</span>
+                        </div>
+                        <div class="quiz-question">
+                            What will be the value of variable <span class="cpp-inline">i</span> after the execution of this empty Loop?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">int i;
+for (i = 0; i++ &lt; 3; ) {
+    // Empty body
+}
+cout &lt;&lt; i;</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(4, 'A', 'wrong', this)">A) 3 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'B', 'correct', this)">B) 4 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'C', 'wrong', this)">C) 5 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'D', 'wrong', this)">D) Infinite loop <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-4"></div>
+                    </div>
+
+                    <!-- MCQ 5 -->
+                    <div class="quiz-card" id="q5">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 5</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which OOP concept refers to "binding data and the functions that manipulate them into a single unit, and restricting direct access from the outside"?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(5, 'A', 'wrong', this)">A) Inheritance <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'B', 'wrong', this)">B) Polymorphism <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'C', 'correct', this)">C) Encapsulation <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'D', 'wrong', this)">D) Abstraction <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-5"></div>
+                    </div>
+                </div>
+
+                <!-- Practical Challenges -->
+                <h3 style="margin-top: 50px; margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-laptop-code" style="color: var(--neon-cyan); margin-left: 8px;"></i>Practical Challenges:</h3>
+
+                <div class="challenge-container">
+                    <!-- Challenge 1 -->
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-bug" style="color: var(--neon-magenta);"></i> Challenge 1: Find the error and fix it!
+                        </div>
+                        <div class="challenge-desc">
+                            The following code contains a compilation error due to OOP principles. Find the error and propose a way to solve it while preserving the principle of Encapsulation.
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class SmartLight {
+    bool isOn; // state of smart light
+public:
+    SmartLight() { isOn = false; }
+};
+
+int main() {
+    SmartLight light;
+    light.isOn = true; // attempt to access private member directly
+    return 0;
+}</code></pre>
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol1', this)"><i class="fa-solid fa-eye"></i> Reveal Challenge Solution</button>
+                        <div class="solution-box" id="sol1">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>الحل البرمجي الصحيح:</h4>
+                                    <p>بص يا هندسة، الغلطة هنا هي إن المتغير <span class="cpp-inline">isOn</span> معرّف كـ <span class="cpp-inline">private</span> افتراضياً (لأن في لغة الـ C++ أي حاجة جوة الكلاس مش مكتوب قبليها كلمة public أو private بتعتبر private تلقائياً). وعشان كدا الـ main مش قادرة تشوفه.</p>
+                                    <p>عشان نصلح الكود مع الحفاظ على الـ **Encapsulation**، لازم نخلي الداتا مخفية ونعمل دالة عامة (Setter) تغير القيمة دي بطريقة آمنة:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> smart_light_fixed.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class SmartLight {
+private:
+    bool isOn; // محمي ومخفي
+
+public:
+    SmartLight() { isOn = false; }
+
+    // دالة عامة لتغيير الحالة (Setter/Interface)
+    void turnOn() {
+        isOn = true;
+        cout &lt;&lt; "Light is now turned ON." &lt;&lt; endl;
+    }
+
+    void turnOff() {
+        isOn = false;
+        cout &lt;&lt; "Light is now turned OFF." &lt;&lt; endl;
+    }
+};
+
+int main() {
+    SmartLight light;
+    light.turnOn(); // تمام جداً وبطريقة آمنة 100%!
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge 2 -->
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-shield-halved" style="color: var(--neon-emerald);"></i> Challenge 2: Writing a Derived Class (Inheritance)
+                        </div>
+                        <div class="challenge-desc">
+                            Write a new class named <span class="cpp-inline">SirenDoorLock</span> that inherits from the base class <span class="cpp-inline">DoorLock</span> built in part 3. It should add a private boolean property for the Siren, and provide functions <span class="cpp-inline">triggerSiren()</span> to start the siren and <span class="cpp-inline">stopSiren()</span> to stop it.
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol2', this)"><i class="fa-solid fa-eye"></i> Reveal Challenge Solution</button>
+                        <div class="solution-box" id="sol2">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>الحل البرمجي للوراثة (Inheritance Code):</h4>
+                                    <p>بص يا هندسة، عشان نورث من الكلاس <span class="cpp-inline">DoorLock</span>، بنستخدم علامة النقطتين فوق بعض والكلمة المفتاحية <span class="cpp-inline">public</span>. ولازم نبعت الـ parameter للـ Constructor بتاع الأب من خلال الـ **Initialization List** زي ما هو موضح تحت:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> inheritance_solution.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+// هنفترض إن الكلاس DoorLock مبني فوق بالفعل
+
+class SirenDoorLock : public DoorLock {
+private:
+    bool sirenActive; // خاصية السارينة المضافة للكلاس الابن بس
+
+public:
+    // الباني هنا بيمرر الـ ID للكونستركتور بتاع الأب (DoorLock)
+    SirenDoorLock(std::string id) : DoorLock(id), sirenActive(false) {
+        std::cout &lt;&lt; "[Siren System] Anti-theft alarm system loaded." &lt;&lt; std::endl;
+    }
+
+    void triggerSiren() {
+        sirenActive = true;
+        std::cout &lt;&lt; "[WARNING!!!] ALARM TRIGGERED! INTRUSION DETECTED ON DEVICE!" &lt;&lt; std::endl;
+    }
+
+    void stopSiren() {
+        sirenActive = false;
+        std::cout &lt;&lt; "[Siren System] Alarm secured and turned off." &lt;&lt; std::endl;
+    }
+};</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p class="neon-footer-brand">By Zain</p>
+        </footer>
+    </div>
+
+    <!-- Prism JS for Code Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <!-- Custom Interactive Logic for UI and Quiz -->
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show current tab content and set active class to clicked button
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            // Scroll to navigation bar so page doesn't feel jumpy
+            window.scrollTo({
+                top: document.querySelector('.nav-tabs-wrapper').offsetTop - 30,
+                behavior: 'smooth'
+            });
+        }
+
+        // Glossary real-time search logic
+        function searchGlossary() {
+            const input = document.getElementById('glossarySearch').value.toLowerCase();
+            const table = document.getElementById('glossaryTable');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                let match = false;
+                const tdEn = tr[i].getElementsByTagName('td')[0];
+                const tdAr = tr[i].getElementsByTagName('td')[1];
+                const tdDesc = tr[i].getElementsByTagName('td')[2];
+
+                if (tdEn && tdEn.innerText.toLowerCase().includes(input)) match = true;
+                if (tdAr && tdAr.innerText.toLowerCase().includes(input)) match = true;
+                if (tdDesc && tdDesc.innerText.toLowerCase().includes(input)) match = true;
+
+                if (match) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        // Quiz verification logic
+        const MCQ_ANSWERS = {
+            1: {
+                correct: 'B',
+                feedback: {
+                    correct: 'أداء ممتاز يا باشمهندس! الإجابة صح فعلاً. ليه بقى؟ لأن عملية القسمة (a / b) بتتم الأول كأعداد صحيحة وتطلع 2، وبعد كدا بيحصل الـ Casting لـ double فتتحول لـ 2.0. الترتيب بيفرق جداً!',
+                    wrong: 'ركز يا هندسة! الكومبيلر هيعمل عملية القسمة (a / b) الأول كأعداد صحيحة والناتج هيكون 2، وبعدين يعمل casting لـ double فتتحول لـ 2.0. الإجابة الصح هي ب.'
+                }
+            },
+            2: {
+                correct: 'A',
+                feedback: {
+                    correct: 'إجابة عبقرية! المتغير b أخد قيمة a قبل التزويد (يعني 5)، وبعد كدا a بقت 6. المتغير c أخد قيمة a بعد التزويد التلقائي (الـ 6 زادت وبقت 7). عشان كدا الناتج 5 7.',
+                    wrong: 'تريكة صعبة بس بسيطة! المتغير b أخد قيمة a القديمة (5) وبعدها a زادت لـ 6. المتغير c عمل زيادة قبيلة (a بقت 7) وأخد القيمة الجديدة. الإجابة الصح هي أ.'
+                }
+            },
+            3: {
+                correct: 'C',
+                feedback: {
+                    correct: 'الله ينور! المتغير a اتبعت بالـ value فمتحركش من مكانه برة الفانكشن، أما b فاتبعت بالـ reference وعنوانه اتعدل جوة الميموري وبقى 20. الإجابة ج هي الصح.',
+                    wrong: 'افتكر دايماً يا هندسة: لما نبعت المتغير من غير علامة الـ & (by value) مش هيتغير برة. ولما نبعته بالـ & (by reference) هيتأثر مباشرة. الإجابة الصح هي ج.'
+                }
+            },
+            4: {
+                correct: 'B',
+                feedback: {
+                    correct: 'يا لعيب! اللوب ده بيبدأ من 0. في الاختبار الأخير i بيكون 3، والشرط 3 < 3 خطأ فبيخرج، بس معامل الزيادة البعدية i++ بيخليه يزيد لـ 4 برة اللوب. الإجابة هي ب.',
+                    wrong: 'ركز في معاملات الزيادة البعدية! اللوب هيختبر الشرط i++ < 3. لما i بتبقى 3 الشرط هيكون false واللوب هيقف، بس الزيادة البعدية هتنفذ وتزود i لـ 4. الإجابة ب.'
+                }
+            },
+            5: {
+                correct: 'C',
+                feedback: {
+                    correct: 'صح تماماً! التغليف أو الكبسلة (Encapsulation) هو المبدأ اللي بيلف الداتا والدوال مع بعض وبيحمي الداتا من اللعب الخارجي عن طريق الـ private members.',
+                    wrong: 'مبدأ الوراثة مش هو المقصود. المبدأ اللي بيربط البيانات والدوال مع بعض ويحميهم هو الـ Encapsulation (التغليف). الإجابة الصح هي ج.'
+                }
+            }
+        };
+
+        function checkAnswer(questionNum, selectedLetter, status, element) {
+            const card = document.getElementById(`q${questionNum}`);
+            const options = card.querySelectorAll('.option-btn');
+            
+            // Disable further clicks for this question
+            options.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('selected');
+            });
+
+            // Mark selected
+            element.classList.add('selected');
+
+            // Feedback showing
+            const feedbackDiv = document.getElementById(`feedback-${questionNum}`);
+            feedbackDiv.style.display = 'block';
+
+            if (status === 'correct') {
+                element.classList.add('correct');
+                element.querySelector('.option-icon').classList.add('fa-check');
+                feedbackDiv.className = 'quiz-feedback success';
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--neon-emerald); margin-left: 8px;"></i>${MCQ_ANSWERS[questionNum].feedback.correct}`;
+            } else {
+                element.classList.add('wrong');
+                element.querySelector('.option-icon').classList.add('fa-xmark');
+                feedbackDiv.className = 'quiz-feedback error';
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-xmark" style="color: var(--neon-magenta); margin-left: 8px;"></i>${MCQ_ANSWERS[questionNum].feedback.wrong}`;
+                
+                // Highlight correct option too
+                options.forEach(btn => {
+                    if (btn.innerText.trim().startsWith(getLetterPrefix(MCQ_ANSWERS[questionNum].correct))) {
+                        btn.classList.add('correct');
+                        btn.querySelector('.option-icon').classList.add('fa-check');
+                    }
+                });
+            }
+        }
+
+        function getLetterPrefix(letter) {
+            if (letter === 'A') return 'A)';
+            if (letter === 'B') return 'B)';
+            if (letter === 'C') return 'C)';
+            if (letter === 'D') return 'D)';
+            return '';
+        }
+
+        function toggleSolution(solId, button) {
+            const solBox = document.getElementById(solId);
+            if (solBox.style.display === 'none' || solBox.style.display === '') {
+                solBox.style.display = 'block';
+                button.innerHTML = `<i class="fa-solid fa-eye-slash"></i> إخفاء كود الحل والشرح`;
+            } else {
+                solBox.style.display = 'none';
+                button.innerHTML = `<i class="fa-solid fa-eye"></i> Reveal Challenge Solution`;
+            }
+        }
+
+        // Copy code to clipboard functionality
+        function copyCode(btn) {
+            const pre = btn.parentElement.nextElementSibling;
+            const code = pre.querySelector('code');
+            
+            navigator.clipboard.writeText(code.innerText).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check" style="color: var(--neon-emerald)"></i> Copied!`;
+                btn.style.borderColor = 'var(--neon-emerald)';
+                btn.style.color = '#ffffff';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    btn.style.color = 'var(--text-secondary)';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

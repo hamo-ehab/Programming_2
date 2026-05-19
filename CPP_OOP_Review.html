@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming 2 | C++ Object-Oriented Programming - Ultimate Review Guide</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Beautiful C++ Code Highlighting (Dark Theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        /* Visual Design & Theme: Zain Neon & Liquid Glass */
+        :root {
+            --bg-color: #050814;
+            --card-bg: rgba(9, 14, 32, 0.7);
+            --card-hover-bg: rgba(14, 22, 50, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(0, 242, 254, 0.4);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #f35588;
+            --neon-blue: #3b82f6;
+            --neon-emerald: #10b981;
+            --neon-gold: #ffd700;
+            --font-arabic: 'Cairo', sans-serif;
+            --font-english: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        /* Ambient Animated Blobs (Liquid Glass effect) */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.14;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        .blob-cyan {
+            width: 550px;
+            height: 550px;
+            background: var(--neon-cyan);
+            top: -10%;
+            right: -10%;
+            animation-duration: 22s;
+        }
+
+        .blob-magenta {
+            width: 650px;
+            height: 650px;
+            background: var(--neon-magenta);
+            bottom: -15%;
+            left: -10%;
+            animation-duration: 28s;
+        }
+
+        .blob-blue {
+            width: 450px;
+            height: 450px;
+            background: var(--neon-blue);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 24s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 8%) scale(1.08); }
+            100% { transform: translate(-3%, -5%) scale(0.95); }
+        }
+
+        /* Glassmorphism Overlay */
+        .glass-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, rgba(5, 8, 20, 0.2), rgba(5, 8, 20, 0.85));
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header design */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-family: var(--font-english);
+            font-size: 0.95rem;
+            color: var(--neon-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--neon-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Navigation Glass Tabs */
+        .nav-tabs-wrapper {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            padding: 6px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            position: sticky;
+            top: 20px;
+            z-index: 10;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            list-style: none;
+            overflow-x: auto;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .nav-tabs {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .nav-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 10px;
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab i {
+            font-size: 1.05rem;
+        }
+
+        .nav-tab:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: #050814;
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
+        }
+
+        /* Tab Content Panel */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Cards */
+        .sec-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sec-card:hover {
+            border-color: var(--card-hover-border);
+            box-shadow: 0 15px 35px rgba(0, 242, 254, 0.1);
+        }
+
+        .sec-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .sec-icon {
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+        }
+
+        .sec-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        p {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin: 25px 0 15px 0;
+            font-weight: 700;
+            border-right: 3px solid var(--neon-cyan);
+            padding-right: 10px;
+        }
+
+        /* Lists formatting */
+        ul, ol {
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 1.02rem;
+            color: var(--text-primary);
+        }
+
+        strong {
+            color: #ffffff;
+        }
+
+        /* Terminology Table styling */
+        .term-table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 25px 0;
+        }
+
+        .term-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.95rem;
+        }
+
+        .term-table th {
+            background: rgba(0, 242, 254, 0.08);
+            color: var(--neon-cyan);
+            font-weight: 700;
+            padding: 12px 15px;
+            border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+            font-size: 1rem;
+        }
+
+        .term-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .term-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .term-eng {
+            font-family: var(--font-english);
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Egyptian Engineering Helper Box */
+        .egy-helper {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-right: 4px solid var(--neon-cyan);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .egy-helper-avatar {
+            background: rgba(0, 242, 254, 0.15);
+            color: var(--neon-cyan);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .egy-helper-content h4 {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .egy-helper-content p {
+            margin: 0;
+            font-size: 0.98rem;
+            color: var(--text-primary);
+            text-align: justify;
+        }
+
+        /* Code Block container */
+        .code-container {
+            background: #090e20;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .code-header {
+            background: rgba(5, 8, 20, 0.8);
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-lang {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-english);
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: var(--neon-cyan);
+            color: #050814;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 18px !important;
+            background: transparent !important;
+            font-size: 0.92rem !important;
+            line-height: 1.5 !important;
+        }
+
+        code[class*="language-"] {
+            font-family: var(--font-mono) !important;
+            text-shadow: none !important;
+        }
+
+        .cpp-inline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.92rem;
+            color: var(--neon-cyan);
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Quiz components styling */
+        .quiz-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: rgba(0, 242, 254, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quiz-number {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--neon-cyan);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            padding: 14px 20px;
+            border-radius: 10px;
+            text-align: right;
+            cursor: pointer;
+            font-size: 0.98rem;
+            font-family: var(--font-arabic);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .option-btn.selected {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 242, 254, 0.05);
+        }
+
+        .option-btn.correct {
+            border-color: var(--neon-emerald) !important;
+            background: rgba(16, 185, 129, 0.08) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--neon-magenta) !important;
+            background: rgba(243, 85, 136, 0.08) !important;
+            color: #ffffff !important;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .quiz-feedback.success {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            color: #a7f3d0;
+        }
+
+        .quiz-feedback.error {
+            background: rgba(243, 85, 136, 0.05);
+            border: 1px solid rgba(243, 85, 136, 0.15);
+            color: #fecdd3;
+        }
+
+        /* Challenge Cards */
+        .challenge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .challenge-card {
+            background: rgba(5, 8, 20, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .challenge-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .challenge-desc {
+            color: var(--text-secondary);
+            font-size: 1.02rem;
+            margin-bottom: 20px;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-blue) 100%);
+            border: none;
+            color: #050814;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--font-arabic);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reveal-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .solution-box {
+            display: none;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(5, 7, 12, 0.9);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 8px;
+        }
+
+        .neon-footer-brand {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.9), 0 0 20px rgba(0, 243, 255, 0.7), 0 0 40px rgba(0, 243, 255, 0.4);
+            letter-spacing: 2px;
+            margin: 0;
+            cursor: pointer;
+            transition: text-shadow 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .neon-footer-brand:hover {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 1), 0 0 40px rgba(0, 243, 255, 0.9), 0 0 80px rgba(0, 243, 255, 0.7);
+            transform: scale(1.08);
+        }
+
+        /* Specific C++ text inside Arabic paragraph helper */
+        .cpp-ar-inline {
+            direction: ltr;
+            unicode-bidi: embed;
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+
+        .arrow-indicator {
+            color: var(--neon-magenta);
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .back-dashboard-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--neon-cyan);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-dashboard-btn:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .back-dashboard-btn {
+                position: static;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Light Blobs -->
+    <div class="ambient-bg">
+        <div class="blob blob-cyan"></div>
+        <div class="blob blob-magenta"></div>
+        <div class="blob blob-blue"></div>
+    </div>
+
+    <!-- Radial Glass Overlay -->
+    <div class="glass-overlay"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <a href="index.html" class="back-dashboard-btn"><i class="fa-solid fa-house"></i> بوابة المحاضرات</a>
+            <div class="logo-badge">
+                <i class="fa-solid fa-star"></i> Ultimate Revision Guide | CSC1200
+            </div>
+            <h1>C++ OOP Final Review</h1>
+            <div class="subtitle">
+                المراجعة الذهبية الشاملة لكامل منهج البرمجة كائنية التوجه (C++ OOP) لتضمن الدرجة النهائية في الامتحانات بأبسط وأقوى أسلوب.
+            </div>
+        </header>
+
+        <!-- Glass Navigation Tabs -->
+        <div class="nav-tabs-wrapper">
+            <ul class="nav-tabs">
+                <li style="flex: 1;">
+                    <button class="nav-tab active" onclick="switchTab(event, 'fundamentals-tab')">
+                        <i class="fa-solid fa-cube"></i> أساسيات الكلاسات والكائنات
+                    </button>
+                </li>
+                <li style="flex: 1;">
+                    <button class="nav-tab" onclick="switchTab(event, 'overloading-tab')">
+                        <i class="fa-solid fa-shuffle"></i> التحميل الزائد والأعضاء الساكنة
+                    </button>
+                </li>
+                <li style="flex: 1;">
+                    <button class="nav-tab" onclick="switchTab(event, 'advanced-tab')">
+                        <i class="fa-solid fa-diagram-project"></i> الوراثة وتعدد الأشكال
+                    </button>
+                </li>
+                <li style="flex: 1;">
+                    <button class="nav-tab" onclick="switchTab(event, 'exam-tab')">
+                        <i class="fa-solid fa-graduation-cap"></i> محاكي الامتحان النهائي (10 MCQs)
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab 1: Fundamentals of Classes & Objects -->
+        <div id="fundamentals-tab" class="tab-content active">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-cube sec-icon"></i>
+                    <h2 class="sec-title">1. الكلاسات والكائنات ودورة الحياة (Classes, Objects & Lifecycle)</h2>
+                </div>
+                <p>
+                    **الكلاس (Class)** هو المخطط الهندسي أو الكتالوج (Blueprint) الذي يصف حالة وسلوك الكائن، بينما **الكائن (Object)** هو التطبيق الفعلي أو الكيان الملموس (Instance) الذي يتم بناؤه في الذاكرة بناءً على هذا المخطط.
+                </p>
+
+                <div class="grid-2">
+                    <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <h4 style="color: var(--neon-cyan); margin-bottom: 10px;">البرمجة الإجرائية (Procedural)</h4>
+                        <ul>
+                            <li>تعتمد على التفكير التنازلي (Top-Down).</li>
+                            <li>البيانات معزولة تماماً عن الدوال التي تعالجها.</li>
+                            <li>التركيز الكامل على "الخطوات والتعليمات المتتالية".</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <h4 style="color: var(--neon-emerald); margin-bottom: 10px;">البرمجة كائنية التوجه (OOP)</h4>
+                        <ul>
+                            <li>تعتمد على التفكير التصاعدي (Bottom-Up).</li>
+                            <li>تجميع البيانات والدوال معاً داخل وحدة واحدة (Object).</li>
+                            <li>حماية البيانات والتواصل المباشر والآمن بين الكائنات.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>محددات الوصول وحماية البيانات (Access Modifiers & Data Hiding):</h3>
+                <p>
+                    نستخدم **الكبسلة (Encapsulation)** لحماية خصائص الكلاس وجعلها مخفية عن العالم الخارجي، ونوفر دوال وصول عامة (Getters / Setters) للتحكم في البيانات بأمان.
+                </p>
+                <ul>
+                    <li><strong>private:</strong> الأعضاء لا يمكن لأحد رؤيتها أو تعديلها إلا دوال الكلاس نفسه (الديفولت في الكلاس).</li>
+                    <li><strong>protected:</strong> الأعضاء مرئية فقط للكلاس نفسه ولجميع الكلاسات التي ترث منه (الأبناء والأحفاد).</li>
+                    <li><strong>public:</strong> الأعضاء متاحة ومكشوفة للجميع داخل وخارج الكلاس وفي الـ <span class="cpp-inline">main</span>.</li>
+                </ul>
+
+                <h3>المشيدات والمهدمات (Constructors & Destructors):</h3>
+                <ul>
+                    <li><strong>المشيد (Constructor):</strong> دالة استثنائية تُستدعى تلقائياً فور ولادة الكائن في الذاكرة. لها نفس اسم الكلاس وليس لها نوع إرجاع (حتى void).</li>
+                    <li><strong>مشيد النسخ التلقائي (Default Copy Constructor):</strong> يقوم بنسخ كائن إلى كائن آخر من نفس النوع (Member-wise Copy). ولكن إذا كان الكلاس يحتوي على مؤشرات وحجز ذاكرة ديناميكية، يجب كتابة مشيد نسخ مخصص لتجنب مشاكل الذاكرة (Deep Copy).</li>
+                    <li><strong>المهدم (Destructor):</strong> دالة استثنائية تبدأ بـ <span class="cpp-inline">~</span> وتُستدعى تلقائياً فور انتهاء دورة حياة الكائن لتنظيف وتفريغ الذاكرة المحجوزة ديناميكياً.</li>
+                </ul>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> class_lifecycle.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Student {
+private:
+    string name;
+    double* gpa; // ذاكرة ديناميكية تحتاج لتنظيف عميق
+
+public:
+    // مشيد بارامتري مع قائمة التهيئة
+    Student(string n, double g) : name(n) {
+        gpa = new double(g);
+        cout << "[Constructor] Created student: " << name << " with GPA: " << *gpa << endl;
+    }
+
+    // مشيد نسخ مخصص لحل مشكلة الذاكرة (Deep Copy Constructor)
+    Student(const Student& other) {
+        name = other.name;
+        gpa = new double(*other.gpa); // حجز مكان جديد في الذاكرة ونسخ القيمة
+        cout << "[Copy Constructor] Deep copied student: " << name << endl;
+    }
+
+    // مهدم الكلاس لتنظيف الرام ومنع تسريب الذاكرة
+    ~Student() {
+        delete gpa; // تفريغ الذاكرة
+        cout << "[Destructor] Deallocated GPA memory for: " << name << endl;
+    }
+};
+
+int main() {
+    Student s1("Zain", 3.95);
+    Student s2 = s1; // استدعاء مشيد النسخ
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Overloading & Static Members -->
+        <div id="overloading-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-shuffle sec-icon"></i>
+                    <h2 class="sec-title">2. التحميل الزائد والأعضاء الساكنة (Overloading & Static Members)</h2>
+                </div>
+                
+                <h3>تحميل الدوال والمشيدات (Method & Constructor Overloading):</h3>
+                <p>
+                    تتيح لك لغة C++ إعلان أكثر من دالة أو مشيد بنفس الاسم تماماً، بشرط أن يختلف **التوقيع (Signature)**. والتوقيع يختلف باختلاف: **عدد البارامترات، أو نوعها، أو ترتيبها**.
+                </p>
+
+                <h3>تحميل العمليات الزائد (Operator Overloading):</h3>
+                <p>
+                    تسمح لنا بإعطاء الرموز الرياضية والمنطقية الأساسية (مثل <span class="cpp-inline">+</span>, <span class="cpp-inline">-</span>, <span class="cpp-inline">==</span>, <span class="cpp-inline">++</span>) سلوكاً جديداً عندما تُستخدم مع الكائنات التي نصنعها، لتسهيل قراءة الكود وجعله طبيعياً.
+                </p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>المهندس الكبير بيقولك بالبلدي:</h4>
+                        <p>
+                            بص يا هندسة، الأعضاء الساكنة (Static Members) دي بتعامل كأنها "أصول مشتركة" في الشركة! المتغير الـ Static مبيتحجزش منه نسخة لكل كائن، هي نسخة واحدة يتيمة في الذاكرة بيشاركوها كل الكائنات مع بعض. والدالة الـ Static متقدرش تقرأ أي متغير عادي في الكلاس إلا لو كان Static هو كمان، لأنها بتشتغل باسم الكلاس مباشرة بدون ما تعمل كائن!
+                        </p>
+                    </div>
+                </div>
+
+                <h3>مثال شامل لتحميل العمليات والأعضاء الساكنة:</h3>
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> static_and_operators.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+class Counter {
+private:
+    int value;
+
+public:
+    // متغير ساكن مشترك بين كل الكائنات لحساب العدد الكلي
+    static int totalCounters; 
+
+    Counter(int val = 0) : value(val) {
+        totalCounters++; // زيادة العدد الكلي فور بناء كائن جديد
+    }
+
+    // دالة ساكنة تعمل باسم الكلاس مباشرة
+    static int getTotalCounters() {
+        return totalCounters; 
+    }
+
+    // تحميل المعامل الثنائي + لجمع قيم كاونترين معاً
+    Counter operator+(const Counter& other) {
+        return Counter(this->value + other.value);
+    }
+
+    void display() const {
+        cout << "Counter Value: " << value << endl;
+    }
+};
+
+// تهيئة المتغير الساكن خارج الكلاس (إلزامي في C++)
+int Counter::totalCounters = 0;
+
+int main() {
+    Counter c1(10);
+    Counter c2(20);
+    
+    Counter c3 = c1 + c2; // جمع الكائنات بشكل طبيعي جداً!
+    c3.display();         // هيطبع: 30
+
+    // استدعاء الدالة الساكنة باسم الكلاس
+    cout << "Total Counters Created: " << Counter::getTotalCounters() << endl; // هيطبع: 3
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Inheritance & Polymorphism -->
+        <div id="advanced-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-diagram-project sec-icon"></i>
+                    <h2 class="sec-title">3. الوراثة وتعدد الأشكال والصداقة (Inheritance & Polymorphism & Friend)</h2>
+                </div>
+                
+                <h3>الوراثة وأوضاعها (Inheritance & Access Modes):</h3>
+                <p>
+                    الوراثة تمكننا من إنشاء كلاس جديد بناء على كلاس موجود لتوفير الكود وتسهيل التعديل. الوراثة تمثل علاقة **"Is-A"**.
+                </p>
+                <ul>
+                    <li><strong>الوراثة العامة (Public):</strong> تظل خصائص الأب العامة عامة في الابن، والخصائص المحمية تظل محمية.</li>
+                    <li><strong>الوراثة المحمية (Protected):</strong> تتحول خصائص الأب العامة والمحمية إلى محمية داخل الابن.</li>
+                    <li><strong>الوراثة الخاصة (Private):</strong> تتحول جميع خصائص الأب العامة والمحمية إلى خاصة ومخفية تماماً داخل الابن.</li>
+                    <li><strong>ملاحظة هامة:</strong> الخصائص الخاصة (Private) الخاصة بالأب لا يمكن للابن الوصول إليها مباشرة تحت أي نوع وراثة!</li>
+                </ul>
+
+                <h3>تعدد الأشكال والدوال الافتراضية (Polymorphism & Virtual Functions):</h3>
+                <p>
+                    تعدد الأشكال الديناميكي (Run-time Polymorphism) يعتمد على استخدام **مؤشر الأب (Base Pointer)** للإشارة إلى كائن الابن، واستدعاء الدوال الافتراضية المعلنة بكلمة <span class="cpp-inline">virtual</span> ليوجه C++ الكود لتشغيل الدالة الصحيحة في الابن المناسب فوراً.
+                </p>
+
+                <h3>الكلاسات المجردة (Abstract Classes):</h3>
+                <p>
+                    يصبح الكلاس مجرداً إذا كان يحتوي على دالة افتراضية نقية واحدة على الأقل (<span class="cpp-inline">virtual int func() = 0;</span>). هذا الكلاس يمنع C++ بناء أي كائنات منه مباشرة، ويستخدم فقط كواجهة وعقد إجباري للأبناء لتطبيق الدوال وتوحيد الهيكل.
+                </p>
+
+                <h3>دوال وفئات الصداقة (Friend Function & Class):</h3>
+                <ul>
+                    <li><strong>الدالة الصديقة (Friend Function):</strong> دالة خارجية ليست عضواً في الكلاس، ولكن يُعطى لها تصريح أمني بقراءة وتعديل متغيرات الكلاس الخاصة والمحمية مباشرة.</li>
+                    <li><strong>الكلاس الصديق (Friend Class):</strong> كلاس خارجي بالكامل يُسمح لجميع دواله بالوصول المباشر لسرية الكلاس المانح للصداقة.</li>
+                    <li><strong>قواعد الصداقة:</strong> الصداقة ليست متبادلة، وليست موروثة على الإطلاق.</li>
+                </ul>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> poly_and_friend.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// كلاس مجرد (Abstract Class)
+class Employee {
+protected:
+    string name;
+public:
+    Employee(string n) : name(n) {}
+    
+    // دالة افتراضية نقية
+    virtual double getSalary() = 0; 
+};
+
+class Developer : public Employee {
+private:
+    double basePay;
+public:
+    Developer(string n, double pay) : Employee(n), basePay(pay) {}
+    
+    double getSalary() override {
+        return basePay + 1500; // راتب المطور مع الحوافز
+    }
+
+    // إعلان دالة فاحصة خارجية كصديقة لقراءة الراتب الأساسي السري
+    friend void printSecretSalary(Developer dev);
+};
+
+void printSecretSalary(Developer dev) {
+    // الوصول للمتغير الخاص basePay مباشرة بدون Getters!
+    cout << "[Audit System] Developer secret base salary: $" << dev.basePay << endl;
+}
+
+int main() {
+    Employee* emp = new Developer("Zain", 8000);
+    
+    // استدعاء دالة الراتب الكلي ديناميكياً عن طريق مؤشر الأب
+    cout << "Total Pay: $" << emp->getSalary() << endl; // هيطبع: 9500
+
+    Developer devObj("Zain", 8000);
+    printSecretSalary(devObj);
+
+    delete emp;
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Interactive Exam Simulator -->
+        <div id="exam-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-graduation-cap sec-icon"></i>
+                    <h2 class="sec-title">محاكي الامتحان النهائي الشامل (10 MCQs + Challenges)</h2>
+                </div>
+                <p style="margin-bottom: 25px;">
+                    تم تجميع هذه الأسئلة من واقع امتحانات السنوات السابقة وكتالوج المراجعة للجامعة لتشمل جميع التفاصيل والخدع البرمجية في لغة C++. اختبر معلوماتك الآن!
+                </p>
+
+                <div class="quiz-section">
+                    <!-- MCQ 1 -->
+                    <div class="quiz-card" id="q1">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 1</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which of the following access modifiers prevents class members from being accessed outside the class, but allows them to be accessed by derived classes?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(1, 'A', 'wrong', this)">A) private <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'B', 'correct', this)">B) protected <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'C', 'wrong', this)">C) public <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'D', 'wrong', this)">D) friend <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-1"></div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div class="quiz-card" id="q2">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 2</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the correct declaration syntax for a static member function named "getCount" returning an int?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(2, 'A', 'wrong', this)">A) int static getCount(); <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'B', 'correct', this)">B) static int getCount(); <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'C', 'wrong', this)">C) int getCount() const static; <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'D', 'wrong', this)">D) static void getCount(int); <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-2"></div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div class="quiz-card" id="q3">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 3</span>
+                        </div>
+                        <div class="quiz-question">
+                            When an object is copied using member-wise copy, but contains pointers to dynamic memory, what issue may arise upon destruction?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(3, 'A', 'wrong', this)">A) Static binding error. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'B', 'wrong', this)">B) Compilation failure. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'C', 'correct', this)">C) Double free / Dangling pointer crash when both objects try to delete the same memory address. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'D', 'wrong', this)">D) Loss of inheritance hierarchy. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-3"></div>
+                    </div>
+
+                    <!-- MCQ 4 -->
+                    <div class="quiz-card" id="q4">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 4</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which of the following properties is true about class friendship in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(4, 'A', 'wrong', this)">A) Friendship is mutual (if A is friend of B, B is friend of A). <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'B', 'wrong', this)">B) Friendship is inherited by subclasses. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'C', 'correct', this)">C) Friendship is neither inherited nor mutual. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'D', 'wrong', this)">D) Friend functions must be called using class objects. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-4"></div>
+                    </div>
+
+                    <!-- MCQ 5 -->
+                    <div class="quiz-card" id="q5">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 5</span>
+                        </div>
+                        <div class="quiz-question">
+                            What makes a class an "Abstract Class" in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(5, 'A', 'wrong', this)">A) Declaring all variables as protected. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'B', 'correct', this)">B) Declaring at least one pure virtual function in the class. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'C', 'wrong', this)">C) Inheriting privately from another class. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'D', 'wrong', this)">D) Defining a copy constructor inside the class. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-5"></div>
+                    </div>
+
+                    <!-- MCQ 6 -->
+                    <div class="quiz-card" id="q6">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 6</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the execution order of destructors in a single inheritance setup (Base class A, Derived class B)?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(6, 'A', 'correct', this)">A) Derived class B's destructor first, then Base class A's destructor. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(6, 'B', 'wrong', this)">B) Base class A's destructor first, then Derived class B's destructor. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(6, 'C', 'wrong', this)">C) They execute simultaneously in parallel. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(6, 'D', 'wrong', this)">D) Only the base destructor executes. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-6"></div>
+                    </div>
+
+                    <!-- MCQ 7 -->
+                    <div class="quiz-card" id="q7">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 7</span>
+                        </div>
+                        <div class="quiz-question">
+                            Under private inheritance, what do the protected members of the base class become in the derived class?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(7, 'A', 'wrong', this)">A) Public <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(7, 'B', 'wrong', this)">B) Protected <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(7, 'C', 'correct', this)">C) Private <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(7, 'D', 'wrong', this)">D) Completely inaccessible and deleted from memory. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-7"></div>
+                    </div>
+
+                    <!-- MCQ 8 -->
+                    <div class="quiz-card" id="q8">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 8</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which operator cannot be overloaded in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(8, 'A', 'wrong', this)">A) + <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(8, 'B', 'wrong', this)">B) [] <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(8, 'C', 'correct', this)">C) :: (Scope Resolution) <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(8, 'D', 'wrong', this)">D) = (Assignment) <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-8"></div>
+                    </div>
+
+                    <!-- MCQ 9 -->
+                    <div class="quiz-card" id="q9">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 9</span>
+                        </div>
+                        <div class="quiz-question">
+                            Can a static member function access non-static variables of the class directly?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(9, 'A', 'wrong', this)">A) Yes, absolutely. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(9, 'B', 'correct', this)">B) No, it can only access static fields and other static functions since it lacks a 'this' pointer. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(9, 'C', 'wrong', this)">C) Only if the variables are marked as protected. <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(9, 'D', 'wrong', this)">D) Only inside the main function. <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-9"></div>
+                    </div>
+
+                    <!-- MCQ 10 -->
+                    <div class="quiz-card" id="q10">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 10</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the relationship described by Composition (when an object of one class is a member of another class)?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(10, 'A', 'correct', this)">A) "Has-A" Relationship <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(10, 'B', 'wrong', this)">B) "Is-A" Relationship <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(10, 'C', 'wrong', this)">C) "Friend-Of" Relationship <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(10, 'D', 'wrong', this)">D) "Uses-A" Relationship <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-10"></div>
+                    </div>
+                </div>
+
+                <!-- Practical Challenges -->
+                <h3 style="margin-top: 50px; margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-laptop-code" style="color: var(--neon-magenta); margin-left: 8px;"></i>Final Master Coding Challenge:</h3>
+
+                <div class="challenge-container">
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-trophy" style="color: var(--neon-gold);"></i> Ultimate C++ Exam Challenge: Academic Portal
+                        </div>
+                        <div class="challenge-desc">
+                            Design a complete C++ OOP hierarchy where:
+                            1. Abstract base class <span class="cpp-inline">Member</span> with protected <span class="cpp-inline">name</span>, parameterized constructor, and a pure virtual function <span class="cpp-inline">showRole() = 0</span>.
+                            2. Derived class <span class="cpp-inline">Professor</span> that has a static count of total professors, overrides <span class="cpp-inline">showRole()</span>, and has a friend class <span class="cpp-inline">PortalAuditor</span>.
+                            3. Friend class <span class="cpp-inline">PortalAuditor</span> that prints professor details including the secret academic research rank directly.
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol-final', this)"><i class="fa-solid fa-eye"></i> Reveal Master Solution</button>
+                        <div class="solution-box" id="sol-final">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>تحليل الحل البرمجي الشامل:</h4>
+                                    <p>بص يا هندسة، ده حل نهائي ممتاز ومحكم بيطبق الـ Abstract Class والـ static members والـ Friend Class مع الـ runtime polymorphism في كود واحد متناسق:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> academic_portal.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Member {
+protected:
+    string name;
+
+public:
+    Member(string n) : name(n) {}
+    virtual void showRole() = 0; // Pure Virtual Function
+    virtual ~Member() {}
+};
+
+class Professor : public Member {
+private:
+    string researchRank;
+
+public:
+    static int profCount; // متغير ساكن
+
+    Professor(string n, string rank) : Member(n), researchRank(rank) {
+        profCount++;
+    }
+
+    void showRole() override {
+        cout << "Professor: " << name << " | Department: Computer Science" << endl;
+    }
+
+    static int getProfCount() {
+        return profCount;
+    }
+
+    friend class PortalAuditor; // الكلاس الصديق
+};
+
+int Professor::profCount = 0; // تهيئة المتغير الساكن
+
+class PortalAuditor {
+public:
+    void auditProfessor(const Professor& prof) {
+        // الوصول المباشر للمتغيرات الخاصة والمحمية
+        cout << "[Portal Audit Logs] Checking Access Rights for " << prof.name << endl;
+        cout << "Research Rank: " << prof.researchRank << " | Approved Status: Active." << endl;
+    }
+};
+
+int main() {
+    // 1. استخدام تعدد الأشكال
+    Member* user = new Professor("Dr. Amr Megahed", "Senior Assistant Professor");
+    user->showRole(); // استدعاء ديناميكي
+
+    // 2. استخدام الكلاس الصديق
+    Professor* profObj = static_cast<Professor*>(user);
+    PortalAuditor auditor;
+    auditor.auditProfessor(*profObj);
+
+    // 3. استدعاء الميثود الساكنة
+    cout << "Total Professors registered: " << Professor::getProfCount() << endl;
+
+    delete user;
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p class="neon-footer-brand">By Zain</p>
+        </footer>
+    </div>
+
+    <!-- Prism JS for Code Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <!-- Custom Interactive Logic for UI and Quiz -->
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show current tab content and set active class to clicked button
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            // Scroll to navigation bar so page doesn't feel jumpy
+            const headerHeight = document.querySelector('header').offsetHeight;
+            window.scrollTo({
+                top: headerHeight - 20,
+                behavior: 'smooth'
+            });
+        }
+
+        // solution reveal toggle
+        function toggleSolution(solId, btn) {
+            const solBox = document.getElementById(solId);
+            if (solBox.style.display === "block") {
+                solBox.style.display = "none";
+                btn.innerHTML = '<i class="fa-solid fa-eye"></i> Reveal Master Solution';
+            } else {
+                solBox.style.display = "block";
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hide Master Solution';
+            }
+        }
+
+        // Quiz scoring state
+        const answers = {
+            1: { ans: 'B', feedback: 'Correct! "protected" restricts access to everyone outside the class, but allows derived classes (subclasses) to access those members directly.' },
+            2: { ans: 'B', feedback: 'Correct! static int getCount(); is the correct way to declare a static member function returning an int in C++.' },
+            3: { ans: 'C', feedback: 'Correct! A shallow copy (member-wise) only copies raw pointers, leading both objects to call delete on the same address, causing a double-free crash. Deep copying is needed!' },
+            4: { ans: 'C', feedback: 'Correct! Friendship is neither mutual (B friend of A doesn\'t mean A is friend of B) nor is it inherited by subclasses.' },
+            5: { ans: 'B', feedback: 'Correct! The presence of at least one pure virtual function (virtual void func() = 0;) in a class makes it abstract.' },
+            6: { ans: 'A', feedback: 'Correct! Destructors always execute in the exact reverse order of constructors: Derived first, followed by Base.' },
+            7: { ans: 'C', feedback: 'Correct! Under private inheritance, all public and protected base members become private inside the derived class.' },
+            8: { ans: 'C', feedback: 'Correct! The Scope Resolution operator (::), dot operator (.), ternary operator (?:), and sizeof operator cannot be overloaded in C++.' },
+            9: { ans: 'B', feedback: 'Correct! Static member functions belong to the class rather than an object instance, and thus cannot access non-static variables directly because they don\'t receive a "this" pointer.' },
+            10: { ans: 'A', feedback: 'Correct! Composition represents a "Has-A" relationship, meaning an object of one class contains an instance of another class.' }
+        };
+
+        function checkAnswer(qNum, selectedOption, result, btn) {
+            const card = document.getElementById('q' + qNum);
+            const buttons = card.querySelectorAll('.option-btn');
+            const feedbackBox = document.getElementById('feedback-' + qNum);
+            
+            // Disable further choices
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('selected');
+            });
+
+            // Mark correct answer and wrong selected answer
+            const correctOpt = answers[qNum].ans;
+            buttons.forEach(b => {
+                if (b.innerText.trim().startsWith(correctOpt)) {
+                    b.classList.add('correct');
+                    b.querySelector('.option-icon').className = "fa-solid fa-circle-check option-icon";
+                } else if (b.innerText.trim().startsWith(selectedOption) && result === 'wrong') {
+                    b.classList.add('wrong');
+                    b.querySelector('.option-icon').className = "fa-solid fa-circle-xmark option-icon";
+                }
+            });
+
+            // Display Feedback Box
+            feedbackBox.style.display = "block";
+            if (result === 'correct') {
+                feedbackBox.className = "quiz-feedback success";
+                feedbackBox.innerHTML = '<i class="fa-solid fa-circle-check" style="margin-left: 8px;"></i>' + answers[qNum].feedback;
+            } else {
+                feedbackBox.className = "quiz-feedback error";
+                feedbackBox.innerHTML = '<i class="fa-solid fa-circle-xmark" style="margin-left: 8px;"></i>' + answers[qNum].feedback;
+            }
+        }
+
+        // Copy button script
+        function copyCode(btn) {
+            const container = btn.closest('.code-container');
+            const codeBlock = container.querySelector('code');
+            const textToCopy = codeBlock.textContent;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check" style="color: var(--neon-emerald);"></i> Copied!';
+                btn.style.borderColor = "var(--neon-emerald)";
+                btn.style.boxShadow = "0 0 10px rgba(16, 185, 129, 0.3)";
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    btn.style.boxShadow = "none";
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

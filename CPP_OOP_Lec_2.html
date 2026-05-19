@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming 2 | C++ Object-Oriented Programming - Lecture 2</title>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Beautiful C++ Code Highlighting (Dark Theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <style>
+        /* Visual Design & Theme: Zain Neon & Liquid Glass */
+        :root {
+            --bg-color: #050814;
+            --card-bg: rgba(9, 14, 32, 0.7);
+            --card-hover-bg: rgba(14, 22, 50, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover-border: rgba(0, 242, 254, 0.4);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #f35588;
+            --neon-blue: #3b82f6;
+            --neon-emerald: #10b981;
+            --neon-gold: #ffd700;
+            --font-arabic: 'Cairo', sans-serif;
+            --font-english: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        /* Ambient Animated Blobs (Liquid Glass effect) */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.14;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        .blob-cyan {
+            width: 550px;
+            height: 550px;
+            background: var(--neon-cyan);
+            top: -10%;
+            right: -10%;
+            animation-duration: 22s;
+        }
+
+        .blob-magenta {
+            width: 650px;
+            height: 650px;
+            background: var(--neon-magenta);
+            bottom: -15%;
+            left: -10%;
+            animation-duration: 28s;
+        }
+
+        .blob-blue {
+            width: 450px;
+            height: 450px;
+            background: var(--neon-blue);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 24s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-40px, 40px) scale(1.15); }
+            100% { transform: translate(40px, -40px) scale(0.9); }
+        }
+
+        /* Glassmorphic Overlay Layer */
+        .glass-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(5, 8, 20, 0.25) 0%, rgba(5, 8, 20, 0.85) 100%);
+            pointer-events: none;
+        }
+
+        /* Container & Grid layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Custom Header styled with Liquid Glass */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            font-family: var(--font-english);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1), 0 0 40px rgba(0, 242, 254, 0.2);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-weight: 300;
+        }
+
+        /* Floating Nav Bar */
+        .nav-tabs-wrapper {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(8, 12, 28, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            padding: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            gap: 5px;
+        }
+
+        .nav-tab {
+            padding: 10px 24px;
+            border-radius: 50px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .nav-tab:hover:not(.active) {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glassmorphic Lecture Sections */
+        .sec-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sec-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            opacity: 0.7;
+        }
+
+        .sec-card:hover {
+            border-color: var(--card-hover-border);
+            box-shadow: 0 20px 45px rgba(0, 242, 254, 0.08);
+        }
+
+        .sec-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .sec-icon {
+            font-size: 2rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .sec-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Egyptian Colloquial Helper Cards */
+        .egy-helper {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-right: 4px solid var(--neon-cyan);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px 15px 15px 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .egy-helper-avatar {
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            background: rgba(0, 242, 254, 0.1);
+            padding: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .egy-helper-content h4 {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .egy-helper-content p {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        /* Monospace and Code Block Styling */
+        .code-container {
+            position: relative;
+            margin: 25px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #0c0f1d;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .code-header {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            direction: ltr;
+        }
+
+        .code-lang {
+            font-family: var(--font-english);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--neon-cyan);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-english);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-btn:hover {
+            background: var(--neon-cyan);
+            color: #000000;
+            border-color: var(--neon-cyan);
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 20px !important;
+            background: transparent !important;
+            font-family: var(--font-mono) !important;
+            font-size: 0.95rem !important;
+            overflow-x: auto;
+            direction: ltr;
+        }
+
+        code[class*="language-"] {
+            font-family: var(--font-mono) !important;
+            text-shadow: none !important;
+        }
+
+        /* Line-by-line breakdown system */
+        .breakdown-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            border-top: none;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .breakdown-box h4 {
+            font-size: 1.05rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            gap: 15px;
+            font-size: 0.95rem;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .breakdown-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .breakdown-line {
+            font-family: var(--font-mono);
+            color: var(--neon-magenta);
+            font-weight: 700;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        .breakdown-desc {
+            color: var(--text-secondary);
+        }
+
+        .breakdown-desc strong {
+            color: #ffffff;
+        }
+
+        /* Table & Glossary Styling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        .custom-table th {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 15px;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .custom-table tr:hover {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .term-en {
+            font-family: var(--font-english);
+            font-weight: 600;
+            color: #ffffff;
+            direction: ltr;
+            unicode-bidi: embed;
+        }
+
+        .term-ar {
+            font-weight: 700;
+            color: var(--neon-cyan);
+        }
+
+        /* Search input for Glossary */
+        .glossary-search {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #ffffff;
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .glossary-search:focus {
+            border-color: var(--neon-cyan);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+        }
+
+        /* Interactive Quiz Layout */
+        .quiz-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quiz-number {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--neon-cyan);
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: right;
+            color: var(--text-primary);
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .option-btn.selected {
+            border-color: var(--neon-blue);
+            background: rgba(59, 130, 246, 0.1);
+            color: #ffffff;
+        }
+
+        .option-btn.correct {
+            border-color: var(--neon-emerald) !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+            color: #ffffff;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--neon-magenta) !important;
+            background: rgba(243, 85, 136, 0.1) !important;
+            color: #ffffff;
+        }
+
+        .option-icon {
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .option-btn.correct .option-icon {
+            color: var(--neon-emerald);
+            opacity: 1;
+        }
+
+        .option-btn.wrong .option-icon {
+            color: var(--neon-magenta);
+            opacity: 1;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            font-size: 0.95rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-feedback.success {
+            border-color: var(--neon-emerald);
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .quiz-feedback.error {
+            border-color: var(--neon-magenta);
+            background: rgba(243, 85, 136, 0.03);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Coding Challenges Grid */
+        .challenge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .challenge-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .challenge-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .reveal-btn {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .reveal-btn:hover {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+            color: #000000;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .solution-box {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* Slide Transition Animations and Styling */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(5, 7, 12, 0.9);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 8px;
+        }
+
+        .neon-footer-brand {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.9), 0 0 20px rgba(0, 243, 255, 0.7), 0 0 40px rgba(0, 243, 255, 0.4);
+            letter-spacing: 2px;
+            margin: 0;
+            cursor: pointer;
+            transition: text-shadow 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .neon-footer-brand:hover {
+            text-shadow: 0 0 20px rgba(0, 243, 255, 1), 0 0 40px rgba(0, 243, 255, 0.9), 0 0 80px rgba(0, 243, 255, 0.7);
+            transform: scale(1.08);
+        }
+
+        /* Specific C++ text inside Arabic paragraph helper */
+        .cpp-inline {
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            background: rgba(0, 242, 254, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            direction: ltr;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Liquid Glass background layers -->
+    <div class="ambient-bg">
+        <div class="blob blob-cyan"></div>
+        <div class="blob blob-magenta"></div>
+        <div class="blob blob-blue"></div>
+    </div>
+    <div class="glass-overlay"></div>
+
+    <div class="container">
+        <!-- Lecture Header -->
+        <header>
+            <div class="logo-badge">
+                <i class="fa-solid fa-code"></i> CSC1200 - Lecture 2
+            </div>
+            <h1>مفهوم الـ Struct وتطبيقاته البرمجية</h1>
+            <p class="subtitle">شرح شامل للتراكيب المخصصة (Structures)، مقارنة المتغيرات، الدوال الهيكلية، المصفوفات، والـ Nested Structs</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs-wrapper">
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab(event, 'struct-def-tab')">
+                    <i class="fa-solid fa-boxes-stacked"></i> تعريف الـ Struct
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'struct-ops-tab')">
+                    <i class="fa-solid fa-calculator"></i> عمليات ومقارنات
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'struct-funcs-tab')">
+                    <i class="fa-solid fa-gears"></i> الـ Struct والدوال
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'struct-arrays-tab')">
+                    <i class="fa-solid fa-network-wired"></i> المصفوفات والتداخل
+                </button>
+                <button class="nav-tab" onclick="switchTab(event, 'quiz-tab')">
+                    <i class="fa-solid fa-gamepad"></i> كويز وتحديات
+                </button>
+            </nav>
+        </div>
+
+        <!-- ==================== TAB 1: DEFINITION ==================== -->
+        <div id="struct-def-tab" class="tab-content active">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-boxes-stacked sec-icon"></i>
+                    <h2 class="sec-title">ما هو الـ Struct ولماذا نحتاجه؟</h2>
+                </div>
+
+                <p>بص يا هندسة، إحنا عارفين إن الـ **Array** تقدر تخزن كذا قيمة بس لازم كلهم يكونوا من **نفس النوع** (كلهم أرقام صحيحة، أو كلهم نصوص، إلخ). طب لو عايزين نعمل سجل كامل لطالب أو موظف فيه بيانات مختلفة؟ يعني الموظف ليه كود (integer)، واسم أول وثاني (string)، وراتب أساسي وبونص (float). هنا بييجي دور الـ **Struct**!</p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-cube"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>الـ Struct بالبلدي</h4>
+                        <p>الـ **Struct** عبارة عن "علبة مخصصة" بتعملها بنفسك (Custom Data Type)، بتجمع جواها متغيرات تانية بأنواع مختلفة حسب رغبتك. المتغيرات اللي جوة دي بنسميها **Members** أو عناصر.</p>
+                    </div>
+                </div>
+
+                <h3>الصيغة العامة لتعريف الـ Struct (Syntax):</h3>
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> struct_definition.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">struct struct_name
+{
+    Datatype member1;
+    Datatype member2;
+    // ...
+    Datatype memberN;
+}; // أوعى تنسى الفصلة المنقوطة هنا!</code></pre>
+                </div>
+
+                <div class="rule-badge" style="background: rgba(243, 85, 136, 0.1); border: 1px solid rgba(243, 85, 136, 0.2); color: var(--neon-magenta); border-radius: 10px; padding: 15px; margin-top: 15px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.5rem; margin-top: 2px;"></i>
+                    <div>
+                        <strong>المطب الشهير: الفصلة المنقوطة (Semicolon `;`)!</strong>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">لو نسيت الفصلة المنقوطة `;` بعد القوس المقفول بتاع الـ `struct` الكومبيلر هيطلعلك أخطاء غريبة جداً ومش هيفهم الكود. دي بتيجي كتير جداً في امتحانات الـ C++!</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 40px;">مثال عملي: كلاس سجل الموظف (Employee Struct)</h3>
+                <p>تطبيقاً على كلام الدكتور عمرو، هنا بننشئ كلاس هيكلي للموظف:</p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> employee_struct.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// تعريف الـ Struct
+struct Employee {
+    int emp_no;
+    string fname;
+    string lname;
+    float salary;
+    float bonus;
+    float net_salary;
+};
+
+int main() {
+    // إنشاء متغيرات من نوع Struct
+    Employee emp1, emp2;
+    
+    // إعطاء قيم للموظف الأول باستخدام معامل النقطة "."
+    emp1.emp_no = 12;
+    emp1.fname = "Ahmed";
+    emp1.lname = "Ali";
+    emp1.salary = 3000.0;
+    emp1.bonus = 500.0;
+    
+    // حساب الراتب الصافي
+    emp1.net_salary = emp1.salary + emp1.bonus;
+
+    // طباعة البيانات على الشاشة
+    cout &lt;&lt; "Employee No: " &lt;&lt; emp1.emp_no &lt;&lt; endl;
+    cout &lt;&lt; "Full Name: " &lt;&lt; emp1.fname &lt;&lt; " " &lt;&lt; emp1.lname &lt;&lt; endl;
+    cout &lt;&lt; "Net Salary: " &lt;&lt; emp1.net_salary &lt;&lt; " EGP" &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+                </div>
+
+                <div class="breakdown-box">
+                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> شرح تفصيلي للأسطر وكيف تعمل:</h4>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">struct Employee { ... };</span>
+                            <span class="breakdown-desc">هنا إحنا بنقول للـ Compiler: احفظ عندك نوع بيانات جديد اسمه **`Employee`**، دا لسه مش بيحجز مكان في الذاكرة لحد ما نخلق منه متغير.</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">Employee emp1;</span>
+                            <span class="breakdown-desc">هنا حجزنا في الميموري مكان كامل باسم **`emp1`**، جواه خانات منفصلة لكل الـ members المحسوبين.</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">emp1.emp_no = 12;</span>
+                            <span class="breakdown-desc">استخدمنا الـ **Dot operator `.`** (معامل الوصول). كأنك بتقول: "يا رامات ادخلي جوة العلبة `emp1` ودوري على الدرج المسمى `emp2.emp_no` واكتبي فيه 12".</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: OPERATIONS ==================== -->
+        <div id="struct-ops-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-calculator sec-icon"></i>
+                    <h2 class="sec-title">عمليات التعيين والمقارنة في الـ Struct</h2>
+                </div>
+
+                <p>بص يا هندسة، في قواعد صارمة لازم تعرفها بخصوص العمليات اللي مسموح تعملها على الـ Struct ككتلة واحدة (Aggregate Operations):</p>
+                
+                <h3 style="margin-top: 20px;">1. عملية التعيين أو النسخ (=): مسموحة! ✅</h3>
+                <p>لو عندك اتنين متغيرات من **نفس نوع الـ Struct**، تقدر تنسخ واحد في التاني بـ `=` مباشرة. الكومبيلر هيعمل نسخ عنصر عنصر (Member-wise Copy) تلقائياً:</p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> assignment.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">Employee emp1, emp2;
+emp1.emp_no = 12;
+emp1.fname = "Ahmed";
+
+// عملية نسخ كاملة ومباشرة!
+emp2 = emp1; 
+
+cout &lt;&lt; emp2.fname; // هيطبع "Ahmed" بنجاح وسهولة!</code></pre>
+                </div>
+
+                <h3 style="margin-top: 40px;">2. العمليات الحسابية والعلاقية (==, !=, &lt;, &gt;): ممنوعة! ❌</h3>
+                <p>متقدرش تقارن متغيرين struct ببعض مباشرة كدا: <span class="cpp-inline">if (emp1 == emp2)</span>. الكومبيلر مش هيفهم وهيطلعلك **Compile Error** علطول!</p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-circle-xmark" style="color: var(--neon-magenta)"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>ليه الكومبيلر بيرفض المقارنة المباشرة؟</h4>
+                        <p>لأن الكومبيلر مش بيبقى عارف يقارن بناءً على إيه؟ هل يقارن برقم الموظف؟ ولا بالمرتب؟ ولا بالاسم؟ عشان كدا إنت لازم تقارن عنصر بعنصر (Member-wise Comparison) بنفسك.</p>
+                    </div>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> comparison_demo.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">// الطريقة الخاطئة (هتسبب compile error):
+// if (emp1 == emp2) { ... }
+
+// الطريقة الصحيحة (مقارنة الأعضاء بالتفصيل):
+if (emp1.emp_no == emp2.emp_no &amp;&amp; emp1.fname == emp2.fname &amp;&amp; emp1.salary == emp2.salary) {
+    cout &lt;&lt; "Employees are identical" &lt;&lt; endl;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: FUNCTIONS ==================== -->
+        <div id="struct-funcs-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-gears sec-icon"></i>
+                    <h2 class="sec-title">تعامل الـ Struct مع الـ Functions</h2>
+                </div>
+
+                <p>الـ Struct مرن جداً في التعامل مع الفانكشنز، عندك طريقتين عشان تبعته كمعامل:</p>
+                <ul>
+                    <li><strong>Pass by Value:</strong> بيبعت نسخة من الـ Struct بالكامل (بيستهلك مساحة لو الحجم كبير).</li>
+                    <li><strong>Pass by Reference:</strong> بيبعت المتغير الأصلي باستخدام الـ <span class="cpp-inline">&amp;</span> (أسرع بكتير وبيرفر الميموري).</li>
+                </ul>
+                <p>وكمان الفانكشن تقدر ترجع متغير من نوع Struct كامل كـ **Return Type**!</p>
+
+                <div class="egy-helper">
+                    <div class="egy-helper-avatar"><i class="fa-solid fa-lightbulb" style="color: var(--neon-cyan)"></i></div>
+                    <div class="egy-helper-content">
+                        <h4>نصيحة هندسية بخصوص جمع كائنات الـ Struct</h4>
+                        <p>بص يا هندسة، لما تيجي تعمل دالة بتجمع بين مسافتين (مثلاً d1 و d2)، ركز جداً في كتابة الأكواد. لازم تجمع عنصر من الكائن الأول مع نفس العنصر من الكائن الثاني، يعني:
+                        <br><span class="cpp-inline">result.inches = d1.inches + d2.inches;</span>.
+                        <br>لو اتلخبطت وكتبت <span class="cpp-inline">d2.inches + d2.inches</span> الكود هيشتغل بس النتيجة هتطلع غلط منطقياً! وإحنا هنا هنكتب الكود الصح والمثالي مع معالجة ذكية للكسور.</p>
+                    </div>
+                </div>
+
+                <h3>كود جمع المسافات (المثال الصحيح والمعالج هندسياً):</h3>
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> distance_sum.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct distance_type {
+    int feet;
+    float inches;
+};
+
+// إعلان الدالة (Function Declaration)
+// الفانكشن دي بتاخد اتنين struct وبترجع struct تالت
+distance_type Add_distances(distance_type d1, distance_type d2);
+
+int main() {
+    distance_type dist1 = {5, 8.5};  // 5 قدم و 8.5 بوصة
+    distance_type dist2 = {3, 6.2};  // 3 قدم و 6.2 بوصة
+    
+    distance_type sum = Add_distances(dist1, dist2);
+    
+    cout &lt;&lt; "Total Distance: " &lt;&lt; sum.feet &lt;&lt; " feet, " &lt;&lt; sum.inches &lt;&lt; " inches" &lt;&lt; endl;
+    return 0;
+}
+
+// تعريف الدالة (Function Definition)
+distance_type Add_distances(distance_type d1, distance_type d2) {
+    distance_type result;
+    result.feet = d1.feet + d2.feet;
+    result.inches = d1.inches + d2.inches; // تصحيح الخطأ المطبعي!
+    
+    // لمسة هندسية: لو البوصات زادت عن 12 (لأن 12 بوصة = 1 قدم)
+    if (result.inches &gt;= 12.0) {
+        result.feet += 1;
+        result.inches -= 12.0;
+    }
+    
+    return result;
+}</code></pre>
+                </div>
+
+                <div class="breakdown-box">
+                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> تحليل عمل الفانكشن:</h4>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">distance_type Add_distances(...)</span>
+                            <span class="breakdown-desc">هنا نوع الإرجاع هو الـ struct المسمى <span class="cpp-inline">distance_type</span>، ودا بيبين مرونة الـ C++ في إرجاع كتل معقدة من البيانات.</span>
+                        </li>
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">if (result.inches &gt;= 12.0)</span>
+                            <span class="breakdown-desc">دي معالجة فيزيائية منطقية؛ بنحول كل 12 بوصة لـ 1 قدم إضافي ونخصمهم من البوصات، لضمان دقة النتائج الهندسية.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: ARRAYS & NESTED ==================== -->
+        <div id="struct-arrays-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-network-wired sec-icon"></i>
+                    <h2 class="sec-title">المصفوفات والـ Structs المتداخلة (Nested)</h2>
+                </div>
+
+                <p>هنا بنبدأ ندخل في الهياكل المعقدة اللي بتشبه الأنظمة الحقيقية في سوق العمل. عندنا 3 حالات رئيسية:</p>
+
+                <!-- Array in Struct -->
+                <h3 style="margin-top: 30px;">أ. مصفوفة بداخل Struct (Arrays inside Struct)</h3>
+                <p>الحالة دي لما يكون الـ Struct نفسه بيحتوي على مصفوفة كعنصر جواه (زي الطالب اللي جواه مصفوفة درجاته في 3 مواد):</p>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> array_in_struct.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">struct Student {
+    int student_no;
+    string sname;
+    float GPA;
+    float marks[3]; // مصفوفة درجات لثلاث مواد
+};
+
+int main() {
+    Student s1;
+    s1.student_no = 120;
+    s1.sname = "Ahmed Ibrahim";
+    s1.GPA = 3.56;
+    
+    // إسناد القيم للمصفوفة الداخلية
+    s1.marks[0] = 80; // المادة الأولى
+    s1.marks[1] = 70; // المادة الثانية
+    s1.marks[2] = 90; // المادة الثالثة
+}</code></pre>
+                </div>
+
+                <!-- Struct in Array -->
+                <h3 style="margin-top: 40px;">ب. مصفوفة من الـ Structs (Arrays of Structs)</h3>
+                <p>الحالة دي لما نحب نخزن كذا موظف أو كذا طالب؛ بنعمل مصفوفة كاملة نوعها هو الـ Struct بتاعنا:</p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> array_of_structs.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">struct Employee {
+    int emp_no;
+    string fname;
+    float salary;
+};
+
+int main() {
+    Employee company[5]; // مصفوفة تتسع لـ 5 موظفين
+    
+    // إدخال بيانات الموظف الأول (Index 0)
+    company[0].emp_no = 101;
+    company[0].fname = "Zain";
+    company[0].salary = 8000;
+    
+    // إدخال بيانات الموظف الثاني (Index 1)
+    company[1].emp_no = 102;
+    company[1].fname = "Omar";
+    company[1].salary = 9500;
+    
+    // لوب لطباعة مرتبات كل الموظفين
+    for (int i = 0; i &lt; 2; i++) {
+        cout &lt;&lt; company[i].fname &lt;&lt; " earns: " &lt;&lt; company[i].salary &lt;&lt; " EGP" &lt;&lt; endl;
+    }
+}</code></pre>
+                </div>
+
+                <!-- Nested Structs -->
+                <h3 style="margin-top: 40px;">ج. تركيب Struct بداخل Struct (Nested Structs)</h3>
+                <p>دي بنستخدمها لما يكون كائن بيحتوي على كائن تفصيلي جواه (زي الموظف اللي جواه عنوانه المفصل):</p>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-lang"><i class="fa-solid fa-code"></i> nested_structs.cpp</div>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+// الـ Struct الداخلي للعنوان
+struct Address {
+    string city;
+    string street;
+    int building_no;
+};
+
+// الـ Struct الخارجي للموظف
+struct Employee {
+    int emp_no;
+    string fname;
+    Address addr; // تداخل: Address جوة Employee!
+};
+
+int main() {
+    Employee emp;
+    emp.emp_no = 55;
+    emp.fname = "Ali";
+    
+    // الوصول للعناصر المتداخلة بـ 2 نقطة "."
+    emp.addr.city = "Cairo";
+    emp.addr.street = "El-Tahrir St";
+    emp.addr.building_no = 14;
+    
+    cout &lt;&lt; emp.fname &lt;&lt; " lives in " &lt;&lt; emp.addr.city &lt;&lt; ", " &lt;&lt; emp.addr.street &lt;&lt; endl;
+    return 0;
+}</code></pre>
+                </div>
+
+                <div class="breakdown-box">
+                    <h4><i class="fa-solid fa-magnifying-glass-chart"></i> كيف يتم الوصول للـ Address؟</h4>
+                    <ul class="breakdown-list">
+                        <li class="breakdown-item">
+                            <span class="breakdown-line">emp.addr.city = "Cairo";</span>
+                            <span class="breakdown-desc">أول نقطة `.` بتدخلك جوة الموظف لتجيب الـ Address، وتاني نقطة `.` بتدخلك جوة الـ Address لتصل للمدينة! تداخل مرن جداً ومنظم.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 5: QUIZ & CHALLENGES ==================== -->
+        <div id="quiz-tab" class="tab-content">
+            <div class="sec-card">
+                <div class="sec-header">
+                    <i class="fa-solid fa-gamepad sec-icon"></i>
+                    <h2 class="sec-title">الكويز التفاعلي والتحديات التطبيقية</h2>
+                </div>
+
+                <h3 style="margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-circle-question" style="color: var(--neon-cyan); margin-left: 8px;"></i>اختبر ذكائك (MCQ Quiz):</h3>
+                
+                <div class="quiz-section">
+                    <!-- MCQ 1 -->
+                    <div class="quiz-card" id="q1">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 1</span>
+                        </div>
+                        <div class="quiz-question">
+                            Which of the following represents a correct, error-free declaration of a Struct in C++?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(1, 'A', 'wrong', this)">A) <code style="direction: ltr; display: inline-block;">struct Point { int x, y }</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'B', 'correct', this)">B) <code style="direction: ltr; display: inline-block;">struct Point { int x, y; };</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'C', 'wrong', this)">C) <code style="direction: ltr; display: inline-block;">struct Point { int x; int y; }</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(1, 'D', 'wrong', this)">D) <code style="direction: ltr; display: inline-block;">class struct Point { int x, y; };</code> <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-1"></div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div class="quiz-card" id="q2">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 2</span>
+                        </div>
+                        <div class="quiz-question">
+                            If we have two variables of the same Struct type, <span class="cpp-inline">emp1</span> and <span class="cpp-inline">emp2</span>, which of the following operations causes a compilation error (Compile Error)?
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(2, 'A', 'wrong', this)">A) <code style="direction: ltr; display: inline-block;">emp1 = emp2;</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'B', 'wrong', this)">B) <code style="direction: ltr; display: inline-block;">emp1.emp_no = emp2.emp_no;</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'C', 'correct', this)">C) <code style="direction: ltr; display: inline-block;">if (emp1 == emp2)</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(2, 'D', 'wrong', this)">D) All of the above are allowed and have no error <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-2"></div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div class="quiz-card" id="q3">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 3</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the approximate size in memory (in bytes) reserved for the variable <span class="cpp-inline">p</span> of the following Struct on a 64-bit system?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">struct Point {
+    int x;   // 4 bytes
+    float y; // 4 bytes
+} p;</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(3, 'A', 'wrong', this)">A) 4 bytes <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'B', 'correct', this)">B) 8 bytes <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'C', 'wrong', this)">C) 16 bytes <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(3, 'D', 'wrong', this)">D) No memory is allocated in RAM for Struct declaration <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-3"></div>
+                    </div>
+
+                    <!-- MCQ 4 -->
+                    <div class="quiz-card" id="q4">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 4</span>
+                        </div>
+                        <div class="quiz-question">
+                            What is the logical error in the following line when attempting to add two distances d1 and d2?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">result.inches = d2.inches + d2.inches;</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(4, 'A', 'wrong', this)">A) Inches should not be added, they should be multiplied <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'B', 'correct', this)">B) It adds the same value d2 twice and completely ignores d1 <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'C', 'wrong', this)">C) The `inches` member is of type `int` and doesn't accept fractions <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(4, 'D', 'wrong', this)">D) The `result` variable must be declared with `new` <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-4"></div>
+                    </div>
+
+                    <!-- MCQ 5 -->
+                    <div class="quiz-card" id="q5">
+                        <div class="quiz-header">
+                            <span class="quiz-number">Question 5</span>
+                        </div>
+                        <div class="quiz-question">
+                            How do we access the city name in the following Nested Struct?
+                            <pre style="margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; direction: ltr;"><code class="language-cpp">struct Info { string city; };
+struct User { Info info; } u;</code></pre>
+                        </div>
+                        <div class="quiz-options">
+                            <button class="option-btn" onclick="checkAnswer(5, 'A', 'wrong', this)">A) <code style="direction: ltr; display: inline-block;">u->info->city</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'B', 'wrong', this)">B) <code style="direction: ltr; display: inline-block;">u.city</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'C', 'correct', this)">C) <code style="direction: ltr; display: inline-block;">u.info.city</code> <i class="fa-solid option-icon"></i></button>
+                            <button class="option-btn" onclick="checkAnswer(5, 'D', 'wrong', this)">D) <code style="direction: ltr; display: inline-block;">u.Info.city</code> <i class="fa-solid option-icon"></i></button>
+                        </div>
+                        <div class="quiz-feedback" id="feedback-5"></div>
+                    </div>
+                </div>
+
+                <!-- Practical Challenges -->
+                <h3 style="margin-top: 50px; margin-bottom: 25px; color: #ffffff;"><i class="fa-solid fa-laptop-code" style="color: var(--neon-cyan); margin-left: 8px;"></i>Practical Challenges:</h3>
+
+                <div class="challenge-container">
+                    <!-- Challenge 1 -->
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-circle-exclamation" style="color: var(--neon-magenta);"></i> Challenge 1: Writing a custom comparison function for a Struct
+                        </div>
+                        <div class="challenge-desc">
+                            Since the compiler rejects using <span class="cpp-inline">==</span> to compare two struct instances directly, write a function named <span class="cpp-inline">isEqual</span> that takes two variables of type struct <span class="cpp-inline">Point</span> and returns a <span class="cpp-inline">bool</span> indicating whether their coordinates (X and Y) are completely identical.
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol1', this)"><i class="fa-solid fa-eye"></i> Reveal Challenge Solution</button>
+                        <div class="solution-box" id="sol1">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>الحل البرمجي الصحيح:</h4>
+                                    <p>بص يا هندسة، هنا بنبعت الـ `Point` بالـ **const reference** عشان نضمن السرعة وعدم استهلاك الميموري بدون داعي، ونقارن الأعضاء عنصر عنصر:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> struct_comparison_solution.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+struct Point {
+    int x;
+    int y;
+};
+
+// دالة المقارنة الذكية والآمنة
+bool isEqual(const Point& p1, const Point& p2) {
+    return (p1.x == p2.x &amp;&amp; p1.y == p2.y);
+}
+
+int main() {
+    Point a = {10, 20};
+    Point b = {10, 20};
+    Point c = {5, 20};
+
+    if (isEqual(a, b)) {
+        cout &lt;&lt; "Point A and Point B are Equal." &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; "Point A and Point B are NOT Equal." &lt;&lt; endl;
+    }
+
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Challenge 2 -->
+                    <div class="challenge-card">
+                        <div class="challenge-title">
+                            <i class="fa-solid fa-medal" style="color: var(--neon-emerald);"></i> Challenge 2: Managing an array of nested structures and finding the best
+                        </div>
+                        <div class="challenge-desc">
+                            Write a complete program that defines a student structure <span class="cpp-inline">Student</span> containing student ID, name, GPA, and an array of marks for 3 subjects. Initialize an array of 3 students, read their details, and write a search algorithm to find the student with the **highest GPA** and print their name, ID, and full marks table.
+                        </div>
+                        <button class="reveal-btn" onclick="toggleSolution('sol2', this)"><i class="fa-solid fa-eye"></i> Reveal Challenge Solution</button>
+                        <div class="solution-box" id="sol2">
+                            <div class="egy-helper">
+                                <div class="egy-helper-avatar"><i class="fa-solid fa-check"></i></div>
+                                <div class="egy-helper-content">
+                                    <h4>الحل البرمجي المتكامل:</h4>
+                                    <p>بص يا هندسة، هنا طبقنا مصفوفة كاملة من الـ Structs وجواها مصفوفة تانية للدرجات وعملنا خوارزمية بحث (Search Algorithm) بسيطة لحساب الطالب المتفوق:</p>
+                                </div>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-header">
+                                    <div class="code-lang"><i class="fa-solid fa-code"></i> student_system.cpp</div>
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                                </div>
+                                <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct Student {
+    int student_no;
+    string sname;
+    float GPA;
+    float marks[3];
+};
+
+int main() {
+    // مصفوفة من 3 طلاب
+    Student classroom[3] = {
+        {101, "Zain Ahmed", 3.85, {85, 90, 95}},
+        {102, "Omar Gamal", 3.92, {92, 94, 98}},
+        {103, "Youssef Eid", 3.71, {80, 85, 88}}
+    };
+
+    // خوارزمية إيجاد صاحب أعلى GPA
+    int bestStudentIndex = 0;
+    float maxGPA = classroom[0].GPA;
+
+    for (int i = 1; i &lt; 3; i++) {
+        if (classroom[i].GPA &gt; maxGPA) {
+            maxGPA = classroom[i].GPA;
+            bestStudentIndex = i;
+        }
+    }
+
+    // طباعة بيانات الطالب المتفوق
+    Student best = classroom[bestStudentIndex];
+    cout &lt;&lt; "==========================================" &lt;&lt; endl;
+    cout &lt;&lt; "🏆 TOP STUDENT FOUND 🏆" &lt;&lt; endl;
+    cout &lt;&lt; "Name: " &lt;&lt; best.sname &lt;&lt; endl;
+    cout &lt;&lt; "ID: " &lt;&lt; best.student_no &lt;&lt; endl;
+    cout &lt;&lt; "GPA: " &lt;&lt; best.GPA &lt;&lt; endl;
+    cout &lt;&lt; "Marks in 3 Subjects: ";
+    for (int j = 0; j &lt; 3; j++) {
+        cout &lt;&lt; best.marks[j] &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl &lt;&lt; "==========================================" &lt;&lt; endl;
+
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p class="neon-footer-brand">By Zain</p>
+        </footer>
+    </div>
+
+    <!-- Prism JS for Code Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <!-- Custom Interactive Logic for UI and Quiz -->
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            window.scrollTo({
+                top: document.querySelector('.nav-tabs-wrapper').offsetTop - 30,
+                behavior: 'smooth'
+            });
+        }
+
+        // Quiz verification logic
+        const MCQ_ANSWERS = {
+            1: {
+                correct: 'B',
+                feedback: {
+                    correct: 'الله ينور يا هندسة! إجابة صحيحة. إعلان الـ struct في لغة C++ بينتهي دايماً بـ قوس مقفول وفصلة منقوطة ( }; )، وأعضاؤه بيتم كتابة الفصلة المنقوطة وراهم برضه.',
+                    wrong: 'خدت المطب يا هندسة! ركز، إعلان الـ struct لازم ينتهي بـ قوس مقفول وفصلة منقوطة ( }; ). الإجابة الصحيحة هي ب.'
+                }
+            },
+            2: {
+                correct: 'C',
+                feedback: {
+                    correct: 'أداء هندسي ممتاز! عملية المقارنة المباشرة (emp1 == emp2) غير مسموحة على الإطلاق في لغة الـ C++ القياسية وهتسبب compile error. لازم تقارن عنصر عنصر بنفسك.',
+                    wrong: 'ركز يا هندسة! نسخ الـ Struct مسموح (=)، وتعديل عضو برضه مسموح. لكن مقارنة الكتلة ببعضها (==) ممنوعة تماماً وتسبب خطأ. الإجابة هي ج.'
+                }
+            },
+            3: {
+                correct: 'B',
+                feedback: {
+                    correct: 'برافو! المتغير x من نوع int بياخد 4 بايت، و y من نوع float بياخد 4 بايت. مجموعهم 8 بايت بيتم حجزهم في الرامات للمتغير p.',
+                    wrong: 'سهلة وبسيطة! الـ int بياخد 4 بايت والـ float بياخد 4 بايت، وبما إن الـ struct بيجمعهم فالحجم الإجمالي هو 8 بايت. الإجابة هي ب.'
+                }
+            },
+            4: {
+                correct: 'B',
+                feedback: {
+                    correct: 'يا لعيب! السطر دا بيجمع d2.inches مرتين ويهمل تماماً d1.inches، ودا خطأ منطقي يخلي حساباتك تطلع غلط.',
+                    wrong: 'ركز يا هندسة! السطر بيقول d2.inches + d2.inches ودا معناه إنه بيكرر جمع نفس العنصر من المسافة الثانية وبيهمل المسافة الأولى d1 تماماً. الإجابة هي ب.'
+                }
+            },
+            5: {
+                correct: 'C',
+                feedback: {
+                    correct: 'ممتاز! المتغير info موجود جوة u بنقطة واحدة، والمدينة city جوة info بنقطة تانية، فيكون السطر u.info.city هو الصحيح للوصول المتداخل.',
+                    wrong: 'ركز في التداخل! المتغير u مش مؤشر (Pointer) عشان تستخدم له ->، هو كائن عادي. وعشان كدا بنستخدم النقط u.info.city. الإجابة هي ج.'
+                }
+            }
+        };
+
+        function checkAnswer(questionNum, selectedLetter, status, element) {
+            const card = document.getElementById(`q${questionNum}`);
+            const options = card.querySelectorAll('.option-btn');
+            
+            options.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('selected');
+            });
+
+            element.classList.add('selected');
+
+            const feedbackDiv = document.getElementById(`feedback-${questionNum}`);
+            feedbackDiv.style.display = 'block';
+
+            if (status === 'correct') {
+                element.classList.add('correct');
+                element.querySelector('.option-icon').classList.add('fa-check');
+                feedbackDiv.className = 'quiz-feedback success';
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--neon-emerald); margin-left: 8px;"></i>${MCQ_ANSWERS[questionNum].feedback.correct}`;
+            } else {
+                element.classList.add('wrong');
+                element.querySelector('.option-icon').classList.add('fa-xmark');
+                feedbackDiv.className = 'quiz-feedback error';
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-xmark" style="color: var(--neon-magenta); margin-left: 8px;"></i>${MCQ_ANSWERS[questionNum].feedback.wrong}`;
+                
+                // Highlight correct option too
+                options.forEach(btn => {
+                    if (btn.innerText.trim().startsWith(getLetterPrefix(MCQ_ANSWERS[questionNum].correct))) {
+                        btn.classList.add('correct');
+                        btn.querySelector('.option-icon').classList.add('fa-check');
+                    }
+                });
+            }
+        }
+
+        function getLetterPrefix(letter) {
+            if (letter === 'A') return 'A)';
+            if (letter === 'B') return 'B)';
+            if (letter === 'C') return 'C)';
+            if (letter === 'D') return 'D)';
+            return '';
+        }
+
+        function toggleSolution(solId, button) {
+            const solBox = document.getElementById(solId);
+            if (solBox.style.display === 'none' || solBox.style.display === '') {
+                solBox.style.display = 'block';
+                button.innerHTML = `<i class="fa-solid fa-eye-slash"></i> إخفاء كود الحل والشرح`;
+            } else {
+                solBox.style.display = 'none';
+                button.innerHTML = `<i class="fa-solid fa-eye"></i> Reveal Challenge Solution`;
+            }
+        }
+
+        function copyCode(btn) {
+            const pre = btn.parentElement.nextElementSibling;
+            const code = pre.querySelector('code');
+            
+            navigator.clipboard.writeText(code.innerText).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check" style="color: var(--neon-emerald)"></i> Copied!`;
+                btn.style.borderColor = 'var(--neon-emerald)';
+                btn.style.color = '#ffffff';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    btn.style.color = 'var(--text-secondary)';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
